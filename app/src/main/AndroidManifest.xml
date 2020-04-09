@@ -12,7 +12,7 @@
         <activity android:name=".MovieViewActivity"/>
         <activity android:name=".MovieSearchActivity" />
         <activity android:name=".HomeActivity" />
-        <activity android:name=".SignUpActivity" />
+        <activity android:name=".SignUpActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
