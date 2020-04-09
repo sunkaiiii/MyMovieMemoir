@@ -13,6 +13,7 @@
     <string name="checked_password">checked password</string>
     <string name="state">state</string>
     <string name="create_account">create account</string>
+    <string name="birthday">birthday</string>
     <string-array name="states">
         <item>WA</item>
         <item>QLD</item>
