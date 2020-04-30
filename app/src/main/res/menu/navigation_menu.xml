@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/baseline_home_black_24"
+        android:title="@string/home_screen" />
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/baseline_search_black_24"
+        android:title="@string/movie_search" />
+    <item
+        android:id="@+id/memoir"
+        android:icon="@drawable/baseline_history_black_24"
+        android:title="@string/movie_memoir" />
+    <item
+        android:id="@+id/reports"
+        android:icon="@drawable/baseline_outlined_flag_black_24"
+        android:title="@string/reports" />
+    <item
+        android:id="@+id/maps"
+        android:icon="@drawable/baseline_map_black_24"
+        android:title="@string/maps" />
+</menu>

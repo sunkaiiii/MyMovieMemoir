@@ -1,4 +1,4 @@
-package com.example.mymoviememoir;
+package com.example.mymoviememoir.activity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,7 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
+
+import com.example.mymoviememoir.R;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -17,6 +18,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         findViewById(R.id.sign_up_btn).setOnClickListener(this);
+        findViewById(R.id.sign_in_btn).setOnClickListener(this);
     }
 
     @Override
@@ -24,6 +26,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.sign_up_btn:
                 startActivityForResult(new Intent(this, SignUpActivity.class), SIGN_UP);
+                break;
+            case R.id.sign_in_btn:
+                startActivity(new Intent(this, HomeActivity.class));
+                break;
         }
     }
 
