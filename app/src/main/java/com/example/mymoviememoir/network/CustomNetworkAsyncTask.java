@@ -22,7 +22,7 @@ public class CustomNetworkAsyncTask extends AsyncTask<RequestHelper, RequestHelp
     protected CustomNetworkResponse doInBackground(RequestHelper... helpers) {
         try {
             return new CustomNetworkResponse(OkHttpNetworkConnection.getInstance().requestRestfulService(requestHelper), null);
-        } catch (NullPointerException | IOException e) {
+        } catch (NullPointerException | IOException| RequestHelper.NoSuchTypeOfModelException e) {
             requestAction.onExecuteFailed(requestHelper, e);
             e.printStackTrace();
             return new CustomNetworkResponse(null, e);
