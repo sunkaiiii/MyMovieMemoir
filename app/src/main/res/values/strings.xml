@@ -19,6 +19,7 @@
     <string name="movie_memoir">Movie Memoir</string>
     <string name="reports">Reports</string>
     <string name="maps">Maps</string>
+    <string name="select">select</string>
     <string-array name="states">
         <item>WA</item>
         <item>QLD</item>

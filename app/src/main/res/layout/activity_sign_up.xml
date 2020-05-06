@@ -55,20 +55,30 @@
                     android:text="@string/female" />
             </RadioGroup>
 
-            <FrameLayout
-
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:background="?attr/selectableItemBackground">
+                android:background="?attr/selectableItemBackground"
+                android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/birthDayInput"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:hint="@string/birthday" />
-            </FrameLayout>
+                    android:text="@string/birthday" />
+
+                <Button
+                    android:id="@+id/btn_select_birthday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/select" />
+
+                <TextView
+                    android:id="@+id/tv_show_birthday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+            </LinearLayout>
 
 
             <!--            <DatePicker-->
@@ -102,7 +112,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/postcode" />
+                    android:hint="@string/postcode"
+                    android:maxLength="4" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -113,7 +124,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/email" />
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -124,7 +136,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/password" />
+                    android:hint="@string/password"
+                    android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -135,7 +148,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/checked_password" />
+                    android:hint="@string/checked_password"
+                    android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button

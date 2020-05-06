@@ -6,6 +6,9 @@ import android.os.Bundle;
 
 import com.example.mymoviememoir.R;
 
+/**
+ * @author sunkai
+ */
 public class MovieViewActivity extends AppCompatActivity {
 
     @Override
