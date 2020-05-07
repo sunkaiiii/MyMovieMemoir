@@ -1,25 +1,36 @@
 package com.example.mymoviememoir.activity;
 
 import android.app.DatePickerDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mymoviememoir.R;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
+import com.example.mymoviememoir.network.RequestHelper;
+import com.example.mymoviememoir.network.RestfulGetModel;
 import com.example.mymoviememoir.network.RestfulPostModel;
 import com.example.mymoviememoir.network.request.SignUpCredentialRequest;
+import com.example.mymoviememoir.network.request.SignUpPersonRequest;
+import com.example.mymoviememoir.utils.Values;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -27,12 +38,13 @@ public class SignUpActivity extends BaseRequestRestulServiceActivity {
     /**
      * Use regex to make an mail validation
      * reference the regex string from
-     * https://blog.mailtrap.io/java-email-validation/
+     * http://regexlib.com/Search.aspx?k=email&AspxAutoDetectCookieSupport=1
      */
-    private final String regex = "^[a-zA-Z0-9_+&*-]+(?:\\\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,7}$";
+    private final String REGEX = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$";
 
     private View btnSelectBirthday;
     private SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+    private SimpleDateFormat requestFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 
     private Calendar m_birthday;
 
@@ -44,6 +56,7 @@ public class SignUpActivity extends BaseRequestRestulServiceActivity {
     private TextInputEditText ePassword;
     private TextInputEditText eCheckedPassword;
     private RadioGroup genderGroup;
+    private Spinner spState;
 
 
     @Override
@@ -63,26 +76,34 @@ public class SignUpActivity extends BaseRequestRestulServiceActivity {
         eCheckedPassword = findViewById(R.id.e_checked_password);
         btnSelectBirthday = findViewById(R.id.btn_select_birthday);
         genderGroup = findViewById(R.id.gender_group);
-        btnSelectBirthday.setOnClickListener(new View.OnClickListener() {
+        spState = findViewById(R.id.sp_state);
+        btnSelectBirthday.setOnClickListener(v -> new DatePickerDialog(SignUpActivity.this, new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onClick(View v) {
-                new DatePickerDialog(SignUpActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, month, dayOfMonth);
-                        m_birthday = calendar;
-                        TextView birthday = findViewById(R.id.tv_show_birthday);
-                        birthday.setText(format.format(calendar.getTime()));
-                        birthday.setVisibility(View.VISIBLE);
-                    }
-                }, 1990, 0, 1).show();
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, month, dayOfMonth);
+                m_birthday = calendar;
+                TextView birthday = findViewById(R.id.tv_show_birthday);
+                birthday.setText(format.format(calendar.getTime()));
+                birthday.setVisibility(View.VISIBLE);
+                if (!isValidBirthDay(m_birthday)) {
+                    findViewById(R.id.tv_error_birthday_text).setVisibility(View.VISIBLE);
+                }
             }
-        });
+        }, 1990, 0, 1).show());
 
         findViewById(R.id.btn_sign_up).setOnClickListener(v -> {
             if (isInformationValid()) {
-                tryToSignUp();
+                requestCheckUserEmailExisting();
+            }
+        });
+    }
+
+    private void requestCheckUserEmailExisting(){
+        requestRestfulService(MyMovieMemoirRestfulAPI.CHECK_USER_NAME, new RestfulGetModel() {
+            @Override
+            public List<String> getPathParameter() {
+                return Collections.singletonList(eEmail.getText().toString());
             }
         });
     }
@@ -94,30 +115,98 @@ public class SignUpActivity extends BaseRequestRestulServiceActivity {
         requestRestfulService(MyMovieMemoirRestfulAPI.SIGN_UP_CREDENTIALS, postModel);
     }
 
+
+    private void tryToSignPerson(int id, SignUpCredentialRequest request) {
+        SignUpPersonRequest personRequest = new SignUpPersonRequest();
+        personRequest.setCredentialsId(new SignUpPersonRequest.CredentialsId(id, request.getUsername(), request.getPassword()));
+        personRequest.setDob(requestFormat.format(m_birthday.getTime()));
+        personRequest.setFname(eFirstName.getText().toString());
+        personRequest.setState(spState.getSelectedItem().toString());
+        personRequest.setPostcode(ePostcode.getText().toString());
+        personRequest.setSurname(eLastName.getText().toString());
+        personRequest.setGender(getGenderEnumByRadioButton().genderSymbol);
+        requestRestfulService(MyMovieMemoirRestfulAPI.SIGN_UP_PERSON, personRequest);
+    }
+
+    @Override
+    public void onPostExecute(RequestHelper helper, String response) {
+        super.onPostExecute(helper, response);
+        switch (helper.getRestfulAPI()) {
+            case CHECK_USER_NAME:
+                List<SignUpCredentialRequest> emailList = new Gson().fromJson(response, List.class);
+                if(emailList==null || emailList.isEmpty()){
+                    tryToSignUp();
+                }else{
+                    eEmail.setError("The email address has existed, please select another one");
+                }
+                break;
+            case SIGN_UP_CREDENTIALS:
+                try {
+                    int id = Integer.parseInt(response);
+                    SignUpCredentialRequest request = (SignUpCredentialRequest) helper.getBodyRequestModel();
+                    tryToSignPerson(id, request);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "unknown error", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case SIGN_UP_PERSON:
+                try {
+                    Toast.makeText(this, "sign up successful", Toast.LENGTH_SHORT).show();
+                    SignUpPersonRequest personRequest = (SignUpPersonRequest) helper.getBodyRequestModel();
+                    getSharedPreferences(Values.USER_INFO, MODE_PRIVATE).edit().putString(Values.PERSON, personRequest.getBodyParameterJson()).apply();
+                    setResult(Values.SUCCESS);
+                    finish();
+                } catch (RequestHelper.NoSuchTypeOfModelException e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+
     private boolean isInformationValid() {
-        //TODO 邮箱验证不对
+        boolean success = true;
+        //TODO 错误信息显示不全
         if (!isValidEmail(eEmail.getText().toString())) {
             eEmail.setError("the email address is invalid");
-            return false;
-        }
-        if (isValidBirthDay(m_birthday)) {
-            TextView tvErrorBirthday = findViewById(R.id.tv_error_birthday_text);
-            tvErrorBirthday.setVisibility(View.VISIBLE);
-            tvErrorBirthday.setText("the birth day is invalid");
-            return false;
+            success = false;
         }
         if (!isValidPostCode(ePostcode.getText().toString())) {
             ePostcode.setError("the post code is invalid");
-            return false;
+            success = false;
         }
-        return true;
+        if (TextUtils.isEmpty(ePassword.getText())) {
+            ePassword.setError("the password cannot be empty");
+            success = false;
+        }
+        if (TextUtils.isEmpty(eCheckedPassword.getText())) {
+            eCheckedPassword.setError("the password cannot be empty");
+            success = false;
+        }
+        if (!TextUtils.equals(eCheckedPassword.getText(), ePassword.getText()) && !TextUtils.isEmpty(ePassword.getText()) && !TextUtils.isEmpty(eCheckedPassword.getText())) {
+            ePassword.setError("the password and checked password are not matched");
+            eCheckedPassword.setError("the password and checked password are not matched");
+            success = false;
+        }
+        if (getGenderEnumByRadioButton() == Gender.UNKNOWN) {
+            Toast.makeText(this, "please select a gender", Toast.LENGTH_SHORT).show();
+            success = false;
+        }
+        if (m_birthday == null) {
+            Toast.makeText(this, "please select your birthday", Toast.LENGTH_SHORT).show();
+            success = false;
+        }
+        return success;
     }
 
     private boolean isValidEmail(@Nullable String email) {
         if (TextUtils.isEmpty(email)) {
             return false;
         }
-        final Pattern pattern = Pattern.compile(regex);
+        final Pattern pattern = Pattern.compile(REGEX);
         return pattern.matcher(email).matches();
     }
 
@@ -125,7 +214,7 @@ public class SignUpActivity extends BaseRequestRestulServiceActivity {
         if (birthday == null) {
             return false;
         }
-        return birthday.compareTo(Calendar.getInstance(Locale.getDefault())) > 0;
+        return birthday.compareTo(Calendar.getInstance(Locale.getDefault())) < 0;
     }
 
 
@@ -159,7 +248,7 @@ public class SignUpActivity extends BaseRequestRestulServiceActivity {
     }
 
 
-    private static enum Gender {
+    private enum Gender {
         MALE("M"),
         FEMALE("F"),
         UNKNOWN("Unknown");

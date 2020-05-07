@@ -20,6 +20,7 @@
     <string name="reports">Reports</string>
     <string name="maps">Maps</string>
     <string name="select">select</string>
+    <string name="birth_day_error">the birth day is invalid</string>
     <string-array name="states">
         <item>WA</item>
         <item>QLD</item>

@@ -3,7 +3,7 @@ package com.example.mymoviememoir.network.request;
 import com.example.mymoviememoir.network.RestfulPostModel;
 import com.google.gson.Gson;
 
-public class SignUpCredentialRequest implements RestfulPostModel {
+public class SignUpCredentialRequest extends BasePostModel {
     private String password;
     private String username;
 
@@ -18,10 +18,5 @@ public class SignUpCredentialRequest implements RestfulPostModel {
 
     public String getUsername() {
         return username;
-    }
-
-    @Override
-    public String getBodyParameterJson() {
-        return new Gson().toJson(this);
     }
 }

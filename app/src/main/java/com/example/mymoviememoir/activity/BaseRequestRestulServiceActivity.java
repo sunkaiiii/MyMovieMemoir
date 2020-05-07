@@ -1,5 +1,7 @@
 package com.example.mymoviememoir.activity;
 
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mymoviememoir.network.CustomNetworkAsyncTask;
@@ -22,8 +24,8 @@ public class BaseRequestRestulServiceActivity extends AppCompatActivity implemen
     }
 
     @Override
-    public void onExecuteFailed(RequestHelper helper, Exception ex) {
-
+    public void onExecuteFailed(RequestHelper helper, String message, Exception ex) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

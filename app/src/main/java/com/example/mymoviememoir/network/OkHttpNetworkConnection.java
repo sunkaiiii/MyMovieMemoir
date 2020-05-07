@@ -1,6 +1,11 @@
 package com.example.mymoviememoir.network;
 
+import android.util.Log;
+
+import androidx.annotation.Nullable;
+
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.HttpUrl;
@@ -19,6 +24,7 @@ public class OkHttpNetworkConnection {
     private static final int PORT = 13219;
     private static final String PATH_SPLITER = "/";
     private static OkHttpNetworkConnection instance;
+    private static final int[] HTTP_OK = {200, 201, 202, 203, 204, 205};
 
     private OkHttpNetworkConnection() {
         client = new OkHttpClient.Builder().build();
@@ -31,7 +37,7 @@ public class OkHttpNetworkConnection {
         return instance;
     }
 
-    public String requestRestfulService(RequestHelper helper) throws IOException, NullPointerException, RequestHelper.NoSuchTypeOfModelException {
+    public String requestRestfulService(RequestHelper helper) throws IOException, NullPointerException, RequestHelper.NoSuchTypeOfModelException, HTTPConnectionErrorException {
         final RestfulPathParameterModel requestModel = helper.getPathRequestModel();
         final MyMovieMemoirRestfulAPI restfulAPI = helper.getRestfulAPI();
         final List<String> pathParameter = requestModel.getPathParameter();
@@ -64,7 +70,36 @@ public class OkHttpNetworkConnection {
                 requestBuilder.delete();
                 break;
         }
+        Log.d("Network Request", helper.getRestfulAPI().getRequestName());
+        if (body != null) {
+            Log.d("Network Request", helper.getBodyRequestModel().getBodyParameterJson());
+        }
         final Response response = client.newCall(requestBuilder.build()).execute();
-        return response.body().string();
+        if (Arrays.binarySearch(HTTP_OK, response.code()) < 0) {
+            throw new HTTPConnectionErrorException(response.code(), response.message());
+        }
+        String responseString = response.body().string();
+        Log.d("Network Response", responseString);
+        return responseString;
+    }
+
+    public static class HTTPConnectionErrorException extends Exception {
+        private String message;
+        private int code;
+
+        public HTTPConnectionErrorException(int code, String reason) {
+            this.code = code;
+            this.message = reason;
+        }
+
+        @Nullable
+        @Override
+        public String getMessage() {
+            return message;
+        }
+
+        public int getCode() {
+            return code;
+        }
     }
 }
