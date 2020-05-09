@@ -6,20 +6,22 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mymoviememoir.R;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
 import com.example.mymoviememoir.network.RequestHelper;
+import com.example.mymoviememoir.network.RestfulGetModel;
 import com.example.mymoviememoir.network.request.SignInRequest;
 import com.example.mymoviememoir.network.request.SignUpPersonRequest;
 import com.example.mymoviememoir.utils.Values;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 
+import java.util.Collections;
+
 public class SignInActivity extends BaseRequestRestulServiceActivity implements View.OnClickListener {
 
-    private int SIGN_UP = 1;
+    private static final int SIGN_UP = 1;
     private TextInputEditText eUsername;
     private TextInputEditText ePassword;
 
@@ -38,6 +40,8 @@ public class SignInActivity extends BaseRequestRestulServiceActivity implements 
                 break;
             case R.id.sign_in_btn:
                 requestSignIn();
+                break;
+            default:
                 break;
         }
     }
@@ -71,6 +75,15 @@ public class SignInActivity extends BaseRequestRestulServiceActivity implements 
                 try {
                     SignUpPersonRequest.CredentialsId credentials = new Gson().fromJson(response, SignUpPersonRequest.CredentialsId.class);
                     getSharedPreferences(Values.USER_INFO, MODE_PRIVATE).edit().putString(Values.CREDENTIALS, new Gson().toJson(credentials)).apply();
+                    getPersonInformation(credentials.getId());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case GET_PERSON_INFORMATIOIN:
+                try {
+                    SignUpPersonRequest personInformation = new Gson().fromJson(response, SignUpPersonRequest.class);
+                    getSharedPreferences(Values.USER_INFO, MODE_PRIVATE).edit().putString(Values.PERSON, personInformation.getBodyParameterJson()).apply();
                     navigateToHomeScreen();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -79,6 +92,10 @@ public class SignInActivity extends BaseRequestRestulServiceActivity implements 
             default:
                 break;
         }
+    }
+
+    private void getPersonInformation(int id) {
+        requestRestfulService(MyMovieMemoirRestfulAPI.GET_PERSON_INFORMATIOIN, (RestfulGetModel) () -> Collections.singletonList(String.valueOf(id)));
     }
 
     @Override

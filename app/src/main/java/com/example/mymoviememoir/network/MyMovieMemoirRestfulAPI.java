@@ -9,6 +9,7 @@ public enum MyMovieMemoirRestfulAPI implements RestfulAPI {
     SIGN_UP_CREDENTIALS("signUpCredentials", "MovieMemoir/webresources/moviememoir.credentials/signUpCredentials", RequestType.POST),
     SIGN_UP_PERSON("signUpPerson", "MovieMemoir/webresources/moviememoir.person", RequestType.POST),
     SIGN_IN("signIn","MovieMemoir/webresources/moviememoir.credentials/signIn",RequestType.GET),
+    GET_PERSON_INFORMATIOIN("getPersonInformation","MovieMemoir/webresources/moviememoir.person/findByCredentialsID",RequestType.GET),
     ;
     private String name;
     private String url;

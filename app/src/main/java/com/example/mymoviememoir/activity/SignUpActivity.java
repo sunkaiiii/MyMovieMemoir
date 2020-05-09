@@ -43,8 +43,6 @@ public class SignUpActivity extends BaseRequestRestulServiceActivity {
     private final String REGEX = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$";
 
     private View btnSelectBirthday;
-    private SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-    private SimpleDateFormat requestFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 
     private Calendar m_birthday;
 
@@ -84,7 +82,7 @@ public class SignUpActivity extends BaseRequestRestulServiceActivity {
                 calendar.set(year, month, dayOfMonth);
                 m_birthday = calendar;
                 TextView birthday = findViewById(R.id.tv_show_birthday);
-                birthday.setText(format.format(calendar.getTime()));
+                birthday.setText(Values.SIMPLE_DATE_FORMAT.format(calendar.getTime()));
                 birthday.setVisibility(View.VISIBLE);
                 if (!isValidBirthDay(m_birthday)) {
                     findViewById(R.id.tv_error_birthday_text).setVisibility(View.VISIBLE);
@@ -119,7 +117,7 @@ public class SignUpActivity extends BaseRequestRestulServiceActivity {
     private void tryToSignPerson(int id, SignUpCredentialRequest request) {
         SignUpPersonRequest personRequest = new SignUpPersonRequest();
         personRequest.setCredentialsId(new SignUpPersonRequest.CredentialsId(id, request.getUsername(), request.getPassword()));
-        personRequest.setDob(requestFormat.format(m_birthday.getTime()));
+        personRequest.setDob(Values.REQUESTING_FORMAT.format(m_birthday.getTime()));
         personRequest.setFname(eFirstName.getText().toString());
         personRequest.setState(spState.getSelectedItem().toString());
         personRequest.setPostcode(ePostcode.getText().toString());
