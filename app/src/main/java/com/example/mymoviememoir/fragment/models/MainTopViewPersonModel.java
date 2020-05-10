@@ -1,4 +1,4 @@
-package com.example.mymoviememoir.fragment;
+package com.example.mymoviememoir.fragment.models;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -9,10 +9,10 @@ import com.example.mymoviememoir.network.request.SignUpPersonRequest;
 /**
  * @author sunkai
  */
-public class MainViewPersonModel extends ViewModel {
+public class MainTopViewPersonModel extends ViewModel {
     private MutableLiveData<SignUpPersonRequest> mPerson;
 
-    public MainViewPersonModel() {
+    public MainTopViewPersonModel() {
         mPerson = new MutableLiveData<>();
     }
 

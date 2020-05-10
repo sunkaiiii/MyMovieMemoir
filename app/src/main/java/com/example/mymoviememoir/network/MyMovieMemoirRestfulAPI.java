@@ -10,6 +10,7 @@ public enum MyMovieMemoirRestfulAPI implements RestfulAPI {
     SIGN_UP_PERSON("signUpPerson", "MovieMemoir/webresources/moviememoir.person", RequestType.POST),
     SIGN_IN("signIn","MovieMemoir/webresources/moviememoir.credentials/signIn",RequestType.GET),
     GET_PERSON_INFORMATIOIN("getPersonInformation","MovieMemoir/webresources/moviememoir.person/findByCredentialsID",RequestType.GET),
+    GET_USER_RECENT_YEAR_HIGHEST_MOVIE_INFORMATION("getUserRecentYearHighestMovies","MovieMemoir/webresources/moviememoir.memoir/getUserRecentYearHighestMovies",RequestType.GET),
     ;
     private String name;
     private String url;

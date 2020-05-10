@@ -13,13 +13,16 @@ import com.example.mymoviememoir.network.RequestHelper;
 import com.example.mymoviememoir.network.RestfulGetModel;
 import com.example.mymoviememoir.network.request.SignInRequest;
 import com.example.mymoviememoir.network.request.SignUpPersonRequest;
+import com.example.mymoviememoir.utils.CredentialInfoUtils;
+import com.example.mymoviememoir.utils.GsonUtils;
+import com.example.mymoviememoir.utils.PersonInfoUtils;
 import com.example.mymoviememoir.utils.Values;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 
 import java.util.Collections;
 
-public class SignInActivity extends BaseRequestRestulServiceActivity implements View.OnClickListener {
+public class SignInActivity extends BaseRequestRestfulServiceActivity implements View.OnClickListener {
 
     private static final int SIGN_UP = 1;
     private TextInputEditText eUsername;
@@ -73,8 +76,9 @@ public class SignInActivity extends BaseRequestRestulServiceActivity implements 
         switch (helper.getRestfulAPI()) {
             case SIGN_IN:
                 try {
-                    SignUpPersonRequest.CredentialsId credentials = new Gson().fromJson(response, SignUpPersonRequest.CredentialsId.class);
-                    getSharedPreferences(Values.USER_INFO, MODE_PRIVATE).edit().putString(Values.CREDENTIALS, new Gson().toJson(credentials)).apply();
+                    SignUpPersonRequest.CredentialsId credentials = GsonUtils.fromJsonToObject(response, SignUpPersonRequest.CredentialsId.class);
+                    getSharedPreferences(Values.USER_INFO, MODE_PRIVATE).edit().putString(Values.CREDENTIALS, GsonUtils.toJson(credentials)).apply();
+                    CredentialInfoUtils.setInstance(credentials);
                     getPersonInformation(credentials.getId());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -82,8 +86,9 @@ public class SignInActivity extends BaseRequestRestulServiceActivity implements 
                 break;
             case GET_PERSON_INFORMATIOIN:
                 try {
-                    SignUpPersonRequest personInformation = new Gson().fromJson(response, SignUpPersonRequest.class);
+                    SignUpPersonRequest personInformation = GsonUtils.fromJsonToObject(response, SignUpPersonRequest.class);
                     getSharedPreferences(Values.USER_INFO, MODE_PRIVATE).edit().putString(Values.PERSON, personInformation.getBodyParameterJson()).apply();
+                    PersonInfoUtils.setInstance(personInformation);
                     navigateToHomeScreen();
                 } catch (Exception e) {
                     e.printStackTrace();

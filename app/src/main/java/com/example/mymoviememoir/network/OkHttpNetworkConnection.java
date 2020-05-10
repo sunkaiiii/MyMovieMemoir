@@ -70,7 +70,7 @@ public class OkHttpNetworkConnection {
                 requestBuilder.delete();
                 break;
         }
-        Log.d("Network Request", helper.getRestfulAPI().getRequestName());
+        Log.d("Network Request", helper.getRestfulAPI().getRequestName()+restfulRequestUrl.build().toString());
         if (body != null) {
             Log.d("Network Request", helper.getBodyRequestModel().getBodyParameterJson());
         }

@@ -1,36 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.MainFragment">
+    android:orientation="vertical"
+    tools:context=".fragment.HomeFragment">
 
-    <LinearLayout
-        android:id="@+id/ll_top_welcome_view"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/top_movie_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primaryColor"
-        android:orientation="vertical"
-        android:padding="18dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/welcome_user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/lightGrey"
-            android:textSize="18sp"
-            tools:text="Hey, Kai!" />
-
-        <TextView
-            android:id="@+id/current_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/primaryTextColor"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            tools:text="22 Jan 2020" />
-    </LinearLayout>
-
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </LinearLayout>

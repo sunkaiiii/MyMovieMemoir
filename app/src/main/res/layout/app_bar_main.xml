@@ -9,13 +9,34 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/primaryColor"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/app_name" />
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_collapseMode="parallax">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@color/primaryColor"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"
+                    app:title="@string/app_name" />
+
+                <FrameLayout
+                    android:id="@+id/top_frame_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_main" />

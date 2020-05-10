@@ -1,7 +1,6 @@
 package com.example.mymoviememoir.activity;
 
 import android.app.DatePickerDialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,20 +20,20 @@ import com.example.mymoviememoir.network.RestfulGetModel;
 import com.example.mymoviememoir.network.RestfulPostModel;
 import com.example.mymoviememoir.network.request.SignUpCredentialRequest;
 import com.example.mymoviememoir.network.request.SignUpPersonRequest;
+import com.example.mymoviememoir.utils.CredentialInfoUtils;
+import com.example.mymoviememoir.utils.GsonUtils;
+import com.example.mymoviememoir.utils.PersonInfoUtils;
 import com.example.mymoviememoir.utils.Values;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-public class SignUpActivity extends BaseRequestRestulServiceActivity {
+public class SignUpActivity extends BaseRequestRestfulServiceActivity {
     /**
      * Use regex to make an mail validation
      * reference the regex string from
@@ -131,7 +130,7 @@ public class SignUpActivity extends BaseRequestRestulServiceActivity {
         super.onPostExecute(helper, response);
         switch (helper.getRestfulAPI()) {
             case CHECK_USER_NAME:
-                List<SignUpCredentialRequest> emailList = new Gson().fromJson(response, List.class);
+                List<SignUpCredentialRequest> emailList = GsonUtils.fromJsonToList(response, SignUpCredentialRequest.class);
                 if(emailList==null || emailList.isEmpty()){
                     tryToSignUp();
                 }else{
@@ -153,6 +152,8 @@ public class SignUpActivity extends BaseRequestRestulServiceActivity {
                     Toast.makeText(this, "sign up successful", Toast.LENGTH_SHORT).show();
                     SignUpPersonRequest personRequest = (SignUpPersonRequest) helper.getBodyRequestModel();
                     getSharedPreferences(Values.USER_INFO, MODE_PRIVATE).edit().putString(Values.PERSON, personRequest.getBodyParameterJson()).apply();
+                    PersonInfoUtils.setInstance(personRequest);
+                    CredentialInfoUtils.setInstance(personRequest.getCredentialsId());
                     setResult(Values.SUCCESS);
                     finish();
                 } catch (RequestHelper.NoSuchTypeOfModelException e) {

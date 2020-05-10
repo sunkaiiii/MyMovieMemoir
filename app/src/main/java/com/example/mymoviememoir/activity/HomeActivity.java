@@ -7,7 +7,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.example.mymoviememoir.R;
-import com.example.mymoviememoir.fragment.MainFragment;
+import com.example.mymoviememoir.fragment.HomeFragment;
+import com.example.mymoviememoir.fragment.MainTopViewFragment;
 
 /**
  * @author sunkai
@@ -20,7 +21,8 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, new MainFragment());
+        fragmentTransaction.replace(R.id.content_frame, new HomeFragment());
+        fragmentTransaction.replace(R.id.top_frame_view,new MainTopViewFragment());
         fragmentTransaction.commit();
     }
 }
