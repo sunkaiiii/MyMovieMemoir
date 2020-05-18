@@ -48,12 +48,8 @@ public class HomeFragment extends BaseRequestRestfulServiceFragment {
     }
 
     private void getMovieInformation() {
-        requestRestfulService(MyMovieMemoirRestfulAPI.GET_USER_RECENT_YEAR_HIGHEST_MOVIE_INFORMATION, new RestfulGetModel() {
-            @Override
-            public List<String> getPathParameter() {
-                return Collections.singletonList(String.valueOf(CredentialInfoUtils.getId()));
-            }
-        });
+        requestRestfulService(MyMovieMemoirRestfulAPI.GET_USER_RECENT_YEAR_HIGHEST_MOVIE_INFORMATION,
+                (RestfulGetModel) () -> Collections.singletonList(String.valueOf(CredentialInfoUtils.getId())));
     }
 
     @Override

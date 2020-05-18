@@ -1,9 +1,6 @@
 package com.example.mymoviememoir.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +15,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mymoviememoir.R;
 import com.example.mymoviememoir.fragment.models.MainTopViewPersonModel;
 import com.example.mymoviememoir.network.request.SignUpPersonRequest;
-import com.example.mymoviememoir.utils.GsonUtils;
 import com.example.mymoviememoir.utils.PersonInfoUtils;
 import com.example.mymoviememoir.utils.Values;
-import com.google.gson.Gson;
 
 import java.util.Calendar;
 import java.util.Locale;

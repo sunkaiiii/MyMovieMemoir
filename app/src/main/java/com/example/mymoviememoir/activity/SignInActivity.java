@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -15,11 +16,13 @@ import com.example.mymoviememoir.network.request.SignInRequest;
 import com.example.mymoviememoir.network.request.SignUpPersonRequest;
 import com.example.mymoviememoir.utils.CredentialInfoUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
+import com.example.mymoviememoir.utils.PasswordUtils;
 import com.example.mymoviememoir.utils.PersonInfoUtils;
 import com.example.mymoviememoir.utils.Values;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 
 public class SignInActivity extends BaseRequestRestfulServiceActivity implements View.OnClickListener {
@@ -53,7 +56,15 @@ public class SignInActivity extends BaseRequestRestfulServiceActivity implements
         if (!validation()) {
             return;
         }
-        SignInRequest signInRequest = new SignInRequest(eUsername.getText().toString(), ePassword.getText().toString());
+        final String password;
+        try {
+            password = PasswordUtils.getHashedPassword(ePassword.getText().toString());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "an error happens during hashing the password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        SignInRequest signInRequest = new SignInRequest(eUsername.getText().toString(), password);
         requestRestfulService(MyMovieMemoirRestfulAPI.SIGN_IN, signInRequest);
     }
 

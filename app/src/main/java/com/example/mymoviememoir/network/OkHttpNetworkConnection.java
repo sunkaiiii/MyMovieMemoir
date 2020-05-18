@@ -18,13 +18,17 @@ import okhttp3.Response;
 public class OkHttpNetworkConnection {
 
     private final OkHttpClient client;
-    private static final String HOST = "192.168.0.189";
-    private static final String SCHEME = "http";
+    ;
+    static final String SCHEME_HTTP = "http";
+    static final String SCHEME_HTTPS = "https";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private static final int PORT = 13219;
     private static final String PATH_SPLITER = "/";
     private static OkHttpNetworkConnection instance;
     private static final int[] HTTP_OK = {200, 201, 202, 203, 204, 205};
+    /*
+    apply your keys
+     */
+    private static final String MOVIE_DB_API_KEY = "";
 
     private OkHttpNetworkConnection() {
         client = new OkHttpClient.Builder().build();
@@ -39,9 +43,10 @@ public class OkHttpNetworkConnection {
 
     public String requestRestfulService(RequestHelper helper) throws IOException, NullPointerException, RequestHelper.NoSuchTypeOfModelException, HTTPConnectionErrorException {
         final RestfulPathParameterModel requestModel = helper.getPathRequestModel();
+        final RequestHost requestHost = helper.getRestfulAPI().getRequestHost();
         final MyMovieMemoirRestfulAPI restfulAPI = helper.getRestfulAPI();
         final List<String> pathParameter = requestModel.getPathParameter();
-        final HttpUrl.Builder restfulRequestUrl = new HttpUrl.Builder().scheme(SCHEME).host(HOST).port(PORT);
+        final HttpUrl.Builder restfulRequestUrl = new HttpUrl.Builder().scheme(requestHost.getScheme()).host(requestHost.getHostUrl()).port(requestHost.getPort());
         for (String url : restfulAPI.getUrl().split(PATH_SPLITER)) {
             restfulRequestUrl.addPathSegment(url);
         }
@@ -70,7 +75,7 @@ public class OkHttpNetworkConnection {
                 requestBuilder.delete();
                 break;
         }
-        Log.d("Network Request", helper.getRestfulAPI().getRequestName()+restfulRequestUrl.build().toString());
+        Log.d("Network Request", helper.getRestfulAPI().getRequestName() + restfulRequestUrl.build().toString());
         if (body != null) {
             Log.d("Network Request", helper.getBodyRequestModel().getBodyParameterJson());
         }

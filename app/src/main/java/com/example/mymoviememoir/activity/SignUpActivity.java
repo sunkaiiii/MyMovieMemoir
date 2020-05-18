@@ -3,6 +3,7 @@ package com.example.mymoviememoir.activity;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
@@ -22,11 +23,14 @@ import com.example.mymoviememoir.network.request.SignUpCredentialRequest;
 import com.example.mymoviememoir.network.request.SignUpPersonRequest;
 import com.example.mymoviememoir.utils.CredentialInfoUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
+import com.example.mymoviememoir.utils.PasswordUtils;
 import com.example.mymoviememoir.utils.PersonInfoUtils;
 import com.example.mymoviememoir.utils.Values;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -96,7 +100,7 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
         });
     }
 
-    private void requestCheckUserEmailExisting(){
+    private void requestCheckUserEmailExisting() {
         requestRestfulService(MyMovieMemoirRestfulAPI.CHECK_USER_NAME, new RestfulGetModel() {
             @Override
             public List<String> getPathParameter() {
@@ -106,7 +110,14 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
     }
 
     private void tryToSignUp() {
-        final String password = ePassword.getText().toString();
+        final String password;
+        try {
+            password = PasswordUtils.getHashedPassword(ePassword.getText().toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "an error happens during hashing the password", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final String email = eEmail.getText().toString();
         final RestfulPostModel postModel = new SignUpCredentialRequest(email, password);
         requestRestfulService(MyMovieMemoirRestfulAPI.SIGN_UP_CREDENTIALS, postModel);
@@ -131,9 +142,9 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
         switch (helper.getRestfulAPI()) {
             case CHECK_USER_NAME:
                 List<SignUpCredentialRequest> emailList = GsonUtils.fromJsonToList(response, SignUpCredentialRequest.class);
-                if(emailList==null || emailList.isEmpty()){
+                if (emailList == null || emailList.isEmpty()) {
                     tryToSignUp();
-                }else{
+                } else {
                     eEmail.setError("The email address has existed, please select another one");
                 }
                 break;
