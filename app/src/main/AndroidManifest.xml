@@ -12,7 +12,6 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity android:name=".activity.MovieViewActivity" />
-        <activity android:name=".activity.MovieSearchActivity" />
         <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.SignUpActivity" />
         <activity android:name=".activity.SignInActivity">

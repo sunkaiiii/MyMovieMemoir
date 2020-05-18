@@ -1,8 +1,5 @@
 package com.example.mymoviememoir.network;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RequestHelper {
     private MyMovieMemoirRestfulAPI restfulAPI;
     private RestfulGetModel getModel;
@@ -34,17 +31,12 @@ public class RequestHelper {
         return restfulAPI;
     }
 
-    public RestfulPathParameterModel getPathRequestModel() throws NoSuchTypeOfModelException {
+    public RestfulParameterModel getPathRequestModel() throws NoSuchTypeOfModelException {
         switch (this.restfulAPI.getRequestType()){
             case GET:
                 return getModel;
             case POST:
-                return new RestfulPathParameterModel() {
-                    @Override
-                    public List<String> getPathParameter() {
-                        return new ArrayList<>();
-                    }
-                };
+                return postModel;
             case PUT:
                 return putModel;
             case DELETE:

@@ -1,5 +1,5 @@
 package com.example.mymoviememoir.network;
 
-public interface RestfulBodyModel {
+public interface RestfulBodyModel extends RestfulParameterModel {
     String getBodyParameterJson();
 }

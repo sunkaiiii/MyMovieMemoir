@@ -1,6 +1,6 @@
 package com.example.mymoviememoir.network.request;
 
-import java.util.Date;
+import com.example.mymoviememoir.network.request.base.BasePostModel;
 
 /**
  * @author sunkai

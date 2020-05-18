@@ -1,4 +1,4 @@
-package com.example.mymoviememoir.network.request;
+package com.example.mymoviememoir.network.request.base;
 
 import com.example.mymoviememoir.network.RestfulPostModel;
 import com.example.mymoviememoir.utils.GsonUtils;

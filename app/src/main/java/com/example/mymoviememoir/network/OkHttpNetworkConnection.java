@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -25,10 +26,6 @@ public class OkHttpNetworkConnection {
     private static final String PATH_SPLITER = "/";
     private static OkHttpNetworkConnection instance;
     private static final int[] HTTP_OK = {200, 201, 202, 203, 204, 205};
-    /*
-    apply your keys
-     */
-    private static final String MOVIE_DB_API_KEY = "";
 
     private OkHttpNetworkConnection() {
         client = new OkHttpClient.Builder().build();
@@ -42,7 +39,7 @@ public class OkHttpNetworkConnection {
     }
 
     public String requestRestfulService(RequestHelper helper) throws IOException, NullPointerException, RequestHelper.NoSuchTypeOfModelException, HTTPConnectionErrorException {
-        final RestfulPathParameterModel requestModel = helper.getPathRequestModel();
+        final RestfulParameterModel requestModel = helper.getPathRequestModel();
         final RequestHost requestHost = helper.getRestfulAPI().getRequestHost();
         final MyMovieMemoirRestfulAPI restfulAPI = helper.getRestfulAPI();
         final List<String> pathParameter = requestModel.getPathParameter();
@@ -53,6 +50,10 @@ public class OkHttpNetworkConnection {
         for (String path : pathParameter) {
             restfulRequestUrl.addPathSegment(path);
         }
+        for (Map.Entry<String, String> queryParameter : requestModel.getQueryGetParameter().entrySet()) {
+            restfulRequestUrl.addQueryParameter(queryParameter.getKey(), queryParameter.getValue());
+        }
+
         final Request.Builder requestBuilder = new Request.Builder().url(restfulRequestUrl.build());
 
         final RequestBody body;

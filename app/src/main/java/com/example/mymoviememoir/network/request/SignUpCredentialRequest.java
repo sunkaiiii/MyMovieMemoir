@@ -1,7 +1,6 @@
 package com.example.mymoviememoir.network.request;
 
-import com.example.mymoviememoir.network.RestfulPostModel;
-import com.google.gson.Gson;
+import com.example.mymoviememoir.network.request.base.BasePostModel;
 
 public class SignUpCredentialRequest extends BasePostModel {
     private String password;
