@@ -1,5 +1,6 @@
 package com.example.mymoviememoir.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mymoviememoir.R;
+import com.example.mymoviememoir.activity.MovieDetailViewActivity;
 import com.example.mymoviememoir.network.RequestHost;
 import com.example.mymoviememoir.network.reponse.MovieSearchListItem;
 
@@ -45,6 +47,13 @@ public class SearchMovieListAdapter extends RecyclerView.Adapter<SearchMovieList
         holder.movieReleaseDate.setText(item.getReleaseDate());
         holder.movieDesc.setText(item.getOverview());
         Glide.with(holder.itemView).load(RequestHost.MOVIE_DB_IMAGE_HOST.getHostUrl() + item.getPosterPath()).into(holder.movieImage);
+        holder.itemView.setOnClickListener((v -> {
+            final Intent intent = new Intent(holder.itemView.getContext(), MovieDetailViewActivity.class);
+            intent.putExtra(MovieDetailViewActivity.MOVIE_NAME, item.getTitle());
+            intent.putExtra(MovieDetailViewActivity.ID, item.getId());
+            intent.putExtra(MovieDetailViewActivity.RELEASE_DATE, item.getReleaseDate());
+            holder.itemView.getContext().startActivity(intent);
+        }));
     }
 
     @Override
