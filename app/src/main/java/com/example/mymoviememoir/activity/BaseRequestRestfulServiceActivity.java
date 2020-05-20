@@ -24,7 +24,6 @@ public abstract class BaseRequestRestfulServiceActivity extends AppCompatActivit
 
     @Override
     public void onPostExecute(RequestHelper helper, String response) {
-
     }
 
 }

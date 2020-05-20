@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/cast_image"
+        android:layout_width="101dp"
+        android:layout_height="132dp"
+        android:scaleType="centerCrop"
+        app:riv_corner_radius="4dp" />
+
+    <TextView
+        android:id="@+id/cast_name"
+        android:layout_width="101dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="Kai Sun" />
+
+    <TextView
+        android:id="@+id/cast_classification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/superLightGrey"
+        android:textSize="12sp"
+        tools:text="voice" />
+</LinearLayout>

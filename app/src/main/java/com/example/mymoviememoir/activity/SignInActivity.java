@@ -87,6 +87,10 @@ public class SignInActivity extends BaseRequestRestfulServiceActivity implements
         switch (helper.getRestfulAPI()) {
             case SIGN_IN:
                 try {
+                    if (TextUtils.isEmpty(response)) {
+                        Toast.makeText(this, "username or password is error, please try again", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     SignUpPersonRequest.CredentialsId credentials = GsonUtils.fromJsonToObject(response, SignUpPersonRequest.CredentialsId.class);
                     getSharedPreferences(Values.USER_INFO, MODE_PRIVATE).edit().putString(Values.CREDENTIALS, GsonUtils.toJson(credentials)).apply();
                     CredentialInfoUtils.setInstance(credentials);
@@ -109,6 +113,7 @@ public class SignInActivity extends BaseRequestRestfulServiceActivity implements
                 break;
         }
     }
+
 
     private void getPersonInformation(int id) {
         requestRestfulService(MyMovieMemoirRestfulAPI.GET_PERSON_INFORMATIOIN, (RestfulGetModel) () -> Collections.singletonList(String.valueOf(id)));

@@ -78,18 +78,15 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
         btnSelectBirthday = findViewById(R.id.btn_select_birthday);
         genderGroup = findViewById(R.id.gender_group);
         spState = findViewById(R.id.sp_state);
-        btnSelectBirthday.setOnClickListener(v -> new DatePickerDialog(SignUpActivity.this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, dayOfMonth);
-                m_birthday = calendar;
-                TextView birthday = findViewById(R.id.tv_show_birthday);
-                birthday.setText(Values.SIMPLE_DATE_FORMAT.format(calendar.getTime()));
-                birthday.setVisibility(View.VISIBLE);
-                if (!isValidBirthDay(m_birthday)) {
-                    findViewById(R.id.tv_error_birthday_text).setVisibility(View.VISIBLE);
-                }
+        btnSelectBirthday.setOnClickListener(v -> new DatePickerDialog(SignUpActivity.this, (view, year, month, dayOfMonth) -> {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, dayOfMonth);
+            m_birthday = calendar;
+            TextView birthday = findViewById(R.id.tv_show_birthday);
+            birthday.setText(Values.SIMPLE_DATE_FORMAT.format(calendar.getTime()));
+            birthday.setVisibility(View.VISIBLE);
+            if (!isValidBirthDay(m_birthday)) {
+                findViewById(R.id.tv_error_birthday_text).setVisibility(View.VISIBLE);
             }
         }, 1990, 0, 1).show());
 

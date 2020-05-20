@@ -12,7 +12,8 @@ public enum MyMovieMemoirRestfulAPI implements RestfulAPI {
     GET_PERSON_INFORMATIOIN("getPersonInformation", "MovieMemoir/webresources/moviememoir.person/findByCredentialsID", RequestType.GET),
     GET_USER_RECENT_YEAR_HIGHEST_MOVIE_INFORMATION("getUserRecentYearHighestMovies", "MovieMemoir/webresources/moviememoir.memoir/getUserRecentYearHighestMovies", RequestType.GET),
     SEARCH_MOVIE_BY_NAME("searhMovieByName","3/search/movie",RequestType.GET,RequestHost.MOVIE_DB_HOST),
-    GET_MOVIE_DETAIL("getMovieDetail","3/movie",RequestType.GET,RequestHost.MOVIE_DB_HOST)
+    GET_MOVIE_DETAIL("getMovieDetail","3/movie",RequestType.GET,RequestHost.MOVIE_DB_HOST),
+    GET_MOVIE_CREDITS("getMovieCredits","3/movie",RequestType.GET,RequestHost.MOVIE_DB_HOST)
     ;
     private String name;
     private String url;
