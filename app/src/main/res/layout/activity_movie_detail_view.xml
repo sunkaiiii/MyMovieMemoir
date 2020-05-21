@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="TextView"
-            android:textColor="@android:color/white"
+            android:textColor="@color/superLightGrey"
             app:layout_constraintStart_toStartOf="@+id/movie_name"
             app:layout_constraintTop_toBottomOf="@+id/movie_name" />
 
@@ -61,7 +61,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="2dp"
             android:text="TextView"
-            android:textColor="@android:color/white"
+            android:textColor="@color/superLightGrey"
             app:layout_constraintStart_toEndOf="@+id/movie_release_year"
             app:layout_constraintTop_toBottomOf="@+id/movie_name" />
 
@@ -71,20 +71,21 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="TextView"
-            android:textColor="@android:color/white"
+            android:textColor="@color/superLightGrey"
             app:layout_constraintEnd_toEndOf="@+id/movie_name"
             app:layout_constraintStart_toStartOf="@+id/movie_release_year"
             app:layout_constraintTop_toBottomOf="@+id/movie_release_year" />
 
         <LinearLayout
             android:id="@+id/movie_rating_layout"
-            android:layout_width="207dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@+id/movie_image"
-            app:layout_constraintEnd_toEndOf="@+id/movie_name"
-            app:layout_constraintStart_toEndOf="@+id/movie_image"
-            app:layout_constraintTop_toBottomOf="@+id/movie_genre"
+            app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/linearLayout"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
             app:layout_constraintVertical_bias="1.0" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -99,12 +100,13 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/movie_detail_content_background"
             android:orientation="vertical"
             android:padding="16dp"
             app:layout_constraintEnd_toEndOf="@+id/recyclerView"
-            app:layout_constraintStart_toStartOf="@+id/recyclerView"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/movie_image"
             app:layout_constraintTop_toBottomOf="@+id/recyclerView">
 
             <TextView
@@ -122,6 +124,62 @@
                 android:layout_marginTop="4dp"
                 android:textColor="@color/superLightGrey"
                 tools:text="asdlaskkvnrinvioernvsioernvirejgiorejgiorsejgiorejgiosrejgiosrejgioerjoiv" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@+id/movie_genre"
+            app:layout_constraintStart_toStartOf="@+id/movie_genre"
+            app:layout_constraintTop_toBottomOf="@+id/movie_genre">
+
+            <FrameLayout
+                android:id="@+id/add_watch_list"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/movie_detail_button_drawable">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:drawableStart="@drawable/baseline_star_black_18"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"
+                    android:text="@string/watch_list"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/add_memoir"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/movie_detail_button_drawable">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@drawable/movie_detail_button_drawable"
+                    android:drawableStart="@drawable/baseline_star_black_18"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"
+                    android:text="@string/memoir"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

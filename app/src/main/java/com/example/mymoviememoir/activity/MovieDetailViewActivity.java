@@ -1,11 +1,16 @@
 package com.example.mymoviememoir.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,7 +18,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,13 +34,14 @@ import com.example.mymoviememoir.network.RequestHost;
 import com.example.mymoviememoir.network.reponse.MovieCastResponse;
 import com.example.mymoviememoir.network.reponse.MovieDetailResponse;
 import com.example.mymoviememoir.network.request.GetMovieDetailRequest;
+import com.example.mymoviememoir.utils.ColorUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity {
+public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity implements View.OnClickListener {
 
     public static final String MOVIE_NAME = "movie_name";
     public static final String RELEASE_DATE = "release_date";
@@ -53,6 +58,8 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity {
     private RecyclerView recyclerView;
     private TextView movieDescription;
     private Toolbar toolbar;
+    private FrameLayout addWatchList;
+    private FrameLayout addMemoir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,10 +86,14 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity {
         movieRatingLayout = findViewById(R.id.movie_rating_layout);
         recyclerView = findViewById(R.id.recyclerView);
         movieDescription = findViewById(R.id.movie_description);
+        addWatchList = findViewById(R.id.add_watch_list);
+        addMemoir = findViewById(R.id.add_memoir);
         toolbar.setTitle("");
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(manager);
+        addMemoir.setOnClickListener(this);
+        addWatchList.setOnClickListener(this);
     }
 
     @Override
@@ -144,11 +155,47 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity {
             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                 if (resource instanceof BitmapDrawable) {
                     final Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
-                    findViewById(R.id.main_view).setBackgroundColor(Palette.from(bitmap).generate().getDarkMutedColor(0xffffffff));
+                    int color = ColorUtils.getDarkColor(bitmap);
+                    int lighterColor = ColorUtils.getLightColor(color);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setStatusBarColor(color);
+                        getWindow().setNavigationBarColor(lighterColor);
+                    }
+                    GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{color, lighterColor});
+                    findViewById(R.id.main_view).setBackground(gradientDrawable);
                 }
                 return false;
             }
         }).into(movieImage);
+
+        double voteAverage = movieDetailResponse.getVoteAverage();
+        for (int i = 0; i < 10; i += 2) {
+            int sub = (int) Math.round(voteAverage - i);
+            ImageView ratingImage = new ImageView(this);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            ratingImage.setLayoutParams(layoutParams);
+            if (sub >= 2) {
+                ratingImage.setImageResource(R.drawable.baseline_star_white_24);
+            } else if (sub == 1) {
+                ratingImage.setImageResource(R.drawable.baseline_star_half_white_24);
+            } else {
+                ratingImage.setImageResource(R.drawable.baseline_star_border_white_24);
+            }
+            movieRatingLayout.addView(ratingImage);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.add_memoir:
+                startActivity(new Intent(this, AddMemoirActivity.class));
+                break;
+            case R.id.add_watch_list:
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

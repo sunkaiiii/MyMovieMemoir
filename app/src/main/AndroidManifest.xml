@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.MovieDetailViewActivity"></activity>
+        <activity android:name=".activity.AddMemoirActivity"></activity>
+        <activity android:name=".activity.MovieDetailViewActivity" />
         <activity android:name=".activity.MovieViewActivity" />
         <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.SignUpActivity" />
