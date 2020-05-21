@@ -51,6 +51,7 @@
             android:layout_marginTop="2dp"
             android:text="TextView"
             android:textColor="@color/superLightGrey"
+            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@+id/movie_name"
             app:layout_constraintTop_toBottomOf="@+id/movie_name" />
 
@@ -62,6 +63,7 @@
             android:layout_marginTop="2dp"
             android:text="TextView"
             android:textColor="@color/superLightGrey"
+            android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@+id/movie_release_year"
             app:layout_constraintTop_toBottomOf="@+id/movie_name" />
 
@@ -72,6 +74,7 @@
             android:layout_marginTop="2dp"
             android:text="TextView"
             android:textColor="@color/superLightGrey"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@+id/movie_name"
             app:layout_constraintStart_toStartOf="@+id/movie_release_year"
             app:layout_constraintTop_toBottomOf="@+id/movie_release_year" />
@@ -205,6 +208,7 @@
             android:layout_marginTop="2dp"
             android:text=""
             android:textColor="@color/superLightGrey"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@+id/movie_genre"
             app:layout_constraintStart_toStartOf="@+id/movie_genre"
             app:layout_constraintTop_toBottomOf="@+id/movie_genre" />
