@@ -18,6 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,6 +28,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.mymoviememoir.R;
+import com.example.mymoviememoir.adapter.MovieCrewAdapter;
 import com.example.mymoviememoir.adapter.MovieDetailCastAdapter;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
 import com.example.mymoviememoir.network.RequestHelper;
@@ -56,10 +58,12 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
     private TextView movieGenre;
     private LinearLayout movieRatingLayout;
     private RecyclerView recyclerView;
+    private RecyclerView crewRecyclerView;
     private TextView movieDescription;
     private Toolbar toolbar;
     private FrameLayout addWatchList;
     private FrameLayout addMemoir;
+    private TextView productContryAndStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,12 +92,16 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
         movieDescription = findViewById(R.id.movie_description);
         addWatchList = findViewById(R.id.add_watch_list);
         addMemoir = findViewById(R.id.add_memoir);
+        crewRecyclerView = findViewById(R.id.crew_layout);
         toolbar.setTitle("");
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(manager);
+        crewRecyclerView.setLayoutManager(gridLayoutManager);
         addMemoir.setOnClickListener(this);
         addWatchList.setOnClickListener(this);
+        productContryAndStatus = findViewById(R.id.product_contry_and_status);
     }
 
     @Override
@@ -109,6 +117,7 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
                 case GET_MOVIE_CREDITS:
                     MovieCastResponse castResponse = GsonUtils.fromJsonToObject(response, MovieCastResponse.class);
                     recyclerView.setAdapter(new MovieDetailCastAdapter(castResponse.getCast()));
+                    crewRecyclerView.setAdapter(new MovieCrewAdapter(castResponse.getCrew().subList(0, 10)));
                     break;
                 default:
                     break;
@@ -145,6 +154,15 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
         int minute = movieDetailResponse.getRuntime() % 60;
         movieDuration.setText(String.format(Locale.getDefault(), "%dh %dm", hour, minute));
         movieDescription.setText(movieDetailResponse.getOverview());
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < movieDetailResponse.getProductionCountries().size(); i++) {
+            stringBuilder.append(movieDetailResponse.getProductionCountries().get(i).getName());
+            if (i < movieDetailResponse.getProductionCountries().size() - 1) {
+                stringBuilder.append("\n");
+            }
+        }
+        stringBuilder.append("\n").append(movieDetailResponse.getStatus());
+        productContryAndStatus.setText(stringBuilder.toString());
         Glide.with(this).load(RequestHost.MOVIE_DB_IMAGE_HOST.getHostUrl() + movieDetailResponse.getPosterPath()).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

@@ -24,7 +24,7 @@
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/movie_image"
             android:layout_width="164dp"
-            android:layout_height="232dp"
+            android:layout_height="261dp"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
@@ -79,14 +79,16 @@
         <LinearLayout
             android:id="@+id/movie_rating_layout"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@+id/movie_image"
             app:layout_constraintEnd_toEndOf="@+id/linearLayout"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/linearLayout"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.00999999" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -100,14 +102,15 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/movie_detail_content_background"
             android:orientation="vertical"
             android:padding="16dp"
             app:layout_constraintEnd_toEndOf="@+id/recyclerView"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/movie_image"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerView">
+            app:layout_constraintTop_toBottomOf="@+id/crew_layout">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -130,11 +133,11 @@
             android:id="@+id/linearLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="@+id/movie_genre"
             app:layout_constraintStart_toStartOf="@+id/movie_genre"
-            app:layout_constraintTop_toBottomOf="@+id/movie_genre">
+            app:layout_constraintTop_toBottomOf="@+id/product_contry_and_status">
 
             <FrameLayout
                 android:id="@+id/add_watch_list"
@@ -181,6 +184,30 @@
 
 
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/crew_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/movie_detail_content_background"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintEnd_toEndOf="@+id/recyclerView"
+            app:layout_constraintStart_toStartOf="@+id/recyclerView"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+            tools:layout_height="300dp" />
+
+        <TextView
+            android:id="@+id/product_contry_and_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text=""
+            android:textColor="@color/superLightGrey"
+            app:layout_constraintEnd_toEndOf="@+id/movie_genre"
+            app:layout_constraintStart_toStartOf="@+id/movie_genre"
+            app:layout_constraintTop_toBottomOf="@+id/movie_genre" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

@@ -2,12 +2,16 @@ package com.example.mymoviememoir.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -33,6 +37,7 @@ public class MovieSearchFragment extends BaseRequestRestfulServiceFragment {
     private EditText searchText;
     private RecyclerView searchMovieList;
     private MovieSearchListModel movieSearchListModel;
+    private CardView searchContainerCard;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,11 +52,33 @@ public class MovieSearchFragment extends BaseRequestRestfulServiceFragment {
         searchBtn = view.findViewById(R.id.search_btn);
         searchText = view.findViewById(R.id.search_edit_text);
         searchMovieList = view.findViewById(R.id.search_movie_result_list);
+        searchContainerCard = view.findViewById(R.id.search_container_view);
         searchBtn.setOnClickListener((v) -> {
             String movieName = searchText.getText().toString();
             SearchMovieRequest searchMovieRequest = new SearchMovieRequest();
             searchMovieRequest.setQuery(movieName);
             requestRestfulService(MyMovieMemoirRestfulAPI.SEARCH_MOVIE_BY_NAME, searchMovieRequest);
+        });
+        searchMovieList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                final Animation animation;
+                if (dy > 0) {
+                    if (searchContainerCard.getVisibility() != View.GONE) {
+                        animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out);
+                        searchContainerCard.setVisibility(View.GONE);
+                        searchContainerCard.startAnimation(animation);
+                    }
+                } else {
+
+                    if (searchContainerCard.getVisibility() != View.VISIBLE) {
+                        animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in);
+                        searchContainerCard.setVisibility(View.VISIBLE);
+                        searchContainerCard.startAnimation(animation);
+                    }
+                }
+
+            }
         });
         movieSearchListModel.getMovies().observe(getViewLifecycleOwner(), this::setDataIntoListView);
     }
