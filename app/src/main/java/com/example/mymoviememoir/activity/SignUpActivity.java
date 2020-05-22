@@ -3,9 +3,7 @@ package com.example.mymoviememoir.activity;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -15,22 +13,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.mymoviememoir.R;
+import com.example.mymoviememoir.entities.Credentials;
+import com.example.mymoviememoir.entities.Person;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
 import com.example.mymoviememoir.network.RequestHelper;
 import com.example.mymoviememoir.network.RestfulGetModel;
 import com.example.mymoviememoir.network.RestfulPostModel;
 import com.example.mymoviememoir.network.request.SignUpCredentialRequest;
-import com.example.mymoviememoir.network.request.SignUpPersonRequest;
 import com.example.mymoviememoir.utils.CredentialInfoUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
 import com.example.mymoviememoir.utils.PasswordUtils;
 import com.example.mymoviememoir.utils.PersonInfoUtils;
 import com.example.mymoviememoir.utils.Values;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.gson.Gson;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -98,12 +94,7 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
     }
 
     private void requestCheckUserEmailExisting() {
-        requestRestfulService(MyMovieMemoirRestfulAPI.CHECK_USER_NAME, new RestfulGetModel() {
-            @Override
-            public List<String> getPathParameter() {
-                return Collections.singletonList(eEmail.getText().toString());
-            }
-        });
+        requestRestfulService(MyMovieMemoirRestfulAPI.CHECK_USER_NAME, (RestfulGetModel) () -> Collections.singletonList(eEmail.getText().toString()));
     }
 
     private void tryToSignUp() {
@@ -122,8 +113,8 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
 
 
     private void tryToSignPerson(int id, SignUpCredentialRequest request) {
-        SignUpPersonRequest personRequest = new SignUpPersonRequest();
-        personRequest.setCredentialsId(new SignUpPersonRequest.CredentialsId(id, request.getUsername(), request.getPassword()));
+        Person personRequest = new com.example.mymoviememoir.entities.Person();
+        personRequest.setCredentialsId(new Credentials(id, request.getUsername(), request.getPassword()));
         personRequest.setDob(Values.REQUESTING_FORMAT.format(m_birthday.getTime()));
         personRequest.setFname(eFirstName.getText().toString());
         personRequest.setState(spState.getSelectedItem().toString());
@@ -158,7 +149,7 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
             case SIGN_UP_PERSON:
                 try {
                     Toast.makeText(this, "sign up successful", Toast.LENGTH_SHORT).show();
-                    SignUpPersonRequest personRequest = (SignUpPersonRequest) helper.getBodyRequestModel();
+                    Person personRequest = (Person) helper.getBodyRequestModel();
                     getSharedPreferences(Values.USER_INFO, MODE_PRIVATE).edit().putString(Values.PERSON, personRequest.getBodyParameterJson()).apply();
                     PersonInfoUtils.setInstance(personRequest);
                     CredentialInfoUtils.setInstance(personRequest.getCredentialsId());

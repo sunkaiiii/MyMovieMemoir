@@ -65,6 +65,8 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
     private FrameLayout addMemoir;
     private TextView productContryAndStatus;
 
+    private MovieDetailResponse movieDetailResponse;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +112,7 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
         try {
             switch (helper.getRestfulAPI()) {
                 case GET_MOVIE_DETAIL:
-                    MovieDetailResponse movieDetailResponse = GsonUtils.fromJsonToObject(response, MovieDetailResponse.class);
+                    movieDetailResponse = GsonUtils.fromJsonToObject(response, MovieDetailResponse.class);
                     fillInfoToView(movieDetailResponse);
                     requestCasts();
                     break;
@@ -207,24 +209,19 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_memoir:
-                startActivity(new Intent(this, AddMemoirActivity.class));
+                if (movieDetailResponse == null) {
+                    return;
+                }
+                final Intent intent = new Intent(this, AddMemoirActivity.class);
+                intent.putExtra(AddMemoirActivity.MOVIE_NAME, movieDetailResponse.getTitle());
+                intent.putExtra(AddMemoirActivity.MOVIE_IMAGE, RequestHost.MOVIE_DB_IMAGE_HOST.getHostUrl() + movieDetailResponse.getPosterPath());
+                intent.putExtra(AddMemoirActivity.MOVIE_RELEASE_DATE, movieDetailResponse.getReleaseDate());
+                startActivity(intent);
                 break;
             case R.id.add_watch_list:
                 break;
             default:
                 break;
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

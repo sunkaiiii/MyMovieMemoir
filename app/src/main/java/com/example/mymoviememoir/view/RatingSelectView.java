@@ -19,7 +19,7 @@ import com.example.mymoviememoir.R;
  * @author sunkai
  */
 public class RatingSelectView extends LinearLayout {
-    private OnRatingScoreSelectedListener listener;
+    private float rating = -1f;
 
     public RatingSelectView(Context context) {
         super(context);
@@ -49,7 +49,7 @@ public class RatingSelectView extends LinearLayout {
             addView(imageView);
         }
         this.setOnTouchListener((v, event) -> {
-            float rating = 0f;
+            rating = 0;
             for (int i = 0; i < getChildCount(); i++) {
                 ImageView imageView = (ImageView) getChildAt(i);
                 SpringAnimation animationX = new SpringAnimation(imageView, SpringAnimation.SCALE_X, 1.0f);
@@ -60,7 +60,6 @@ public class RatingSelectView extends LinearLayout {
                 animationY.getSpring().setStiffness(SpringForce.STIFFNESS_LOW);
                 animationY.getSpring().setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY);
                 animationY.setStartValue(0.7f);
-
                 int render = (int) (event.getX() - imageView.getX());
                 if (render > imageView.getWidth()) {
                     rating += 1;
@@ -79,9 +78,6 @@ public class RatingSelectView extends LinearLayout {
                     imageView.setImageResource(R.drawable.baseline_star_border_black_48);
                 }
             }
-            if (listener != null) {
-                listener.onSelect(rating);
-            }
             performClick();
             return true;
         });
@@ -92,8 +88,8 @@ public class RatingSelectView extends LinearLayout {
         return super.performClick();
     }
 
-    public interface OnRatingScoreSelectedListener {
-        void onSelect(float ratingScore);
+    public float getRatingScore() {
+        return rating;
     }
 }
 

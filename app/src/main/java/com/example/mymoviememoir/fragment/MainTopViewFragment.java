@@ -13,8 +13,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mymoviememoir.R;
+import com.example.mymoviememoir.entities.Person;
 import com.example.mymoviememoir.fragment.models.MainTopViewPersonModel;
-import com.example.mymoviememoir.network.request.SignUpPersonRequest;
 import com.example.mymoviememoir.utils.PersonInfoUtils;
 import com.example.mymoviememoir.utils.Values;
 
@@ -53,7 +53,7 @@ public class MainTopViewFragment extends Fragment {
         mViewModel.setPerson(PersonInfoUtils.getPersonInstance());
     }
 
-    private void fillPersonInformation(SignUpPersonRequest signUpPersonRequest) {
+    private void fillPersonInformation(Person signUpPersonRequest) {
         llTopWelcomeView.setVisibility(View.VISIBLE);
         welcomeUserName.setText(String.format("Welcome, %s", signUpPersonRequest.getFname()));
         currentDate.setText(Values.MAIN_FRAGMENT_DISPLAY_TIME_FORMAT.format(Calendar.getInstance(Locale.getDefault()).getTime()));

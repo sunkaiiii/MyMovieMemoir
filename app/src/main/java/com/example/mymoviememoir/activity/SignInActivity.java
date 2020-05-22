@@ -9,18 +9,18 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.example.mymoviememoir.R;
+import com.example.mymoviememoir.entities.Credentials;
+import com.example.mymoviememoir.entities.Person;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
 import com.example.mymoviememoir.network.RequestHelper;
 import com.example.mymoviememoir.network.RestfulGetModel;
 import com.example.mymoviememoir.network.request.SignInRequest;
-import com.example.mymoviememoir.network.request.SignUpPersonRequest;
 import com.example.mymoviememoir.utils.CredentialInfoUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
 import com.example.mymoviememoir.utils.PasswordUtils;
 import com.example.mymoviememoir.utils.PersonInfoUtils;
 import com.example.mymoviememoir.utils.Values;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.gson.Gson;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
@@ -91,7 +91,7 @@ public class SignInActivity extends BaseRequestRestfulServiceActivity implements
                         Toast.makeText(this, "username or password is error, please try again", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    SignUpPersonRequest.CredentialsId credentials = GsonUtils.fromJsonToObject(response, SignUpPersonRequest.CredentialsId.class);
+                    Credentials credentials = GsonUtils.fromJsonToObject(response,Credentials.class);
                     getSharedPreferences(Values.USER_INFO, MODE_PRIVATE).edit().putString(Values.CREDENTIALS, GsonUtils.toJson(credentials)).apply();
                     CredentialInfoUtils.setInstance(credentials);
                     getPersonInformation(credentials.getId());
@@ -101,7 +101,7 @@ public class SignInActivity extends BaseRequestRestfulServiceActivity implements
                 break;
             case GET_PERSON_INFORMATIOIN:
                 try {
-                    SignUpPersonRequest personInformation = GsonUtils.fromJsonToObject(response, SignUpPersonRequest.class);
+                    Person personInformation = GsonUtils.fromJsonToObject(response, Person.class);
                     getSharedPreferences(Values.USER_INFO, MODE_PRIVATE).edit().putString(Values.PERSON, personInformation.getBodyParameterJson()).apply();
                     PersonInfoUtils.setInstance(personInformation);
                     navigateToHomeScreen();

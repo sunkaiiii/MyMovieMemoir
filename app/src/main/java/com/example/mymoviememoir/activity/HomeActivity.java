@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * @author sunkai
  */
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends BaseRequestRestfulServiceActivity implements NavigationView.OnNavigationItemSelectedListener {
     NavigationView navigationView;
     DrawerLayout drawerLayout;
     private Map<Integer, Fragment> fragmentMap;

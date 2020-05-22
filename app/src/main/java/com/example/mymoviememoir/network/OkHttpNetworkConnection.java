@@ -15,11 +15,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class OkHttpNetworkConnection {
 
     private final OkHttpClient client;
-    ;
     static final String SCHEME_HTTP = "http";
     static final String SCHEME_HTTPS = "https";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -76,26 +76,33 @@ public class OkHttpNetworkConnection {
                 requestBuilder.delete();
                 break;
         }
-        Log.d("Network Request", helper.getRestfulAPI().getRequestName() + restfulRequestUrl.build().toString());
+        Log.d("Network Request", helper.getRestfulAPI().getRequestName() + ": " + restfulRequestUrl.build().toString());
         if (body != null) {
             Log.d("Network Request", helper.getBodyRequestModel().getBodyParameterJson());
         }
         final Response response = client.newCall(requestBuilder.build()).execute();
-        if (Arrays.binarySearch(HTTP_OK, response.code()) < 0) {
-            throw new HTTPConnectionErrorException(response.code(), response.message());
+        try {
+            if (Arrays.binarySearch(HTTP_OK, response.code()) < 0) {
+                throw new HTTPConnectionErrorException(response.code(), response.message(), response.body().string());
+            }
+            String responseString = response.body().string();
+            Log.d("Network Response", responseString);
+            return responseString;
+        } finally {
+            response.body().close();
         }
-        String responseString = response.body().string();
-        Log.d("Network Response", responseString);
-        return responseString;
+
     }
 
     public static class HTTPConnectionErrorException extends Exception {
         private String message;
         private int code;
+        private String body;
 
-        public HTTPConnectionErrorException(int code, String reason) {
+        public HTTPConnectionErrorException(int code, String reason, String body) {
             this.code = code;
             this.message = reason;
+            this.body = body;
         }
 
         @Nullable
@@ -106,6 +113,10 @@ public class OkHttpNetworkConnection {
 
         public int getCode() {
             return code;
+        }
+
+        public String getBody() {
+            return body;
         }
     }
 }

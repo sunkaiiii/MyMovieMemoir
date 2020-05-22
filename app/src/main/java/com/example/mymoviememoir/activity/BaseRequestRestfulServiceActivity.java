@@ -1,7 +1,9 @@
 package com.example.mymoviememoir.activity;
 
+import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mymoviememoir.network.DefaultRequestHttpAction;
@@ -26,4 +28,15 @@ public abstract class BaseRequestRestfulServiceActivity extends AppCompatActivit
     public void onPostExecute(RequestHelper helper, String response) {
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
