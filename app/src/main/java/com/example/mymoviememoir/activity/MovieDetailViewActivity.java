@@ -217,6 +217,7 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
                 intent.putExtra(AddMemoirActivity.MOVIE_IMAGE, RequestHost.MOVIE_DB_IMAGE_HOST.getHostUrl() + movieDetailResponse.getPosterPath());
                 intent.putExtra(AddMemoirActivity.MOVIE_RELEASE_DATE, movieDetailResponse.getReleaseDate());
                 intent.putExtra(AddMemoirActivity.MOVIE_ID,id);
+                intent.putExtra(AddMemoirActivity.PUBLIC_RATING,movieDetailResponse.getVoteAverage());
                 startActivity(intent);
                 break;
             case R.id.add_watch_list:

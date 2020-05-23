@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.example.mymoviememoir.R;
 import com.example.mymoviememoir.fragment.HomeFragment;
 import com.example.mymoviememoir.fragment.MainTopViewFragment;
+import com.example.mymoviememoir.fragment.MemoirFragment;
 import com.example.mymoviememoir.fragment.MovieSearchFragment;
 import com.google.android.material.navigation.NavigationView;
 
@@ -65,7 +66,7 @@ public class HomeActivity extends BaseRequestRestfulServiceActivity implements N
                 fragment = fragmentMap.get(R.layout.main_fragment);
                 break;
             case R.id.search:
-                if (fragmentMap.get(R.layout.fragment_movie_search) != null) {
+                if (fragmentMap.containsKey(R.layout.fragment_movie_search)) {
                     fragment = fragmentMap.get(R.layout.fragment_movie_search);
                 } else {
                     fragment = new MovieSearchFragment();
@@ -74,7 +75,13 @@ public class HomeActivity extends BaseRequestRestfulServiceActivity implements N
 
                 break;
             case R.id.memoir:
-                fragment = null;
+                if(fragmentMap.containsKey(R.layout.fragment_memoir)){
+                    fragment = fragmentMap.get(R.layout.fragment_memoir);
+                }else{
+                    fragment = new MemoirFragment();
+                    fragmentMap.put(R.layout.fragment_memoir,fragment);
+                }
+
                 break;
             case R.id.reports:
                 fragment = null;

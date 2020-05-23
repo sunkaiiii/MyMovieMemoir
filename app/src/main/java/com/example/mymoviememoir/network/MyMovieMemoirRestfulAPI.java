@@ -18,7 +18,8 @@ public enum MyMovieMemoirRestfulAPI implements RestfulAPI {
     GET_ALL_CINEMA_NAME("getAllCinemaName", "MovieMemoir/webresources/moviememoir.cinema/getAllCinemaName", RequestType.GET),
     ADD_CINEMA("addCinema", "MovieMemoir/webresources/moviememoir.cinema", RequestType.POST),
     GET_CINEMA_BY_NAME_AND_SUBURB("getCinemaByNameAndLocationSuburb", "MovieMemoir/webresources/moviememoir.cinema/getCinemaByNameAndLocationSuburb", RequestType.GET),
-    ADD_MOVIE_MEMOIR("addMovieMemoir","MovieMemoir/webresources/moviememoir.memoir",RequestType.POST)
+    ADD_MOVIE_MEMOIR("addMovieMemoir","MovieMemoir/webresources/moviememoir.memoir",RequestType.POST),
+    GET_MEMOIR_BY_ID("getMemoirById","/MovieMemoir/webresources/moviememoir.memoir/findByPersonId/",RequestType.GET)
     ;
     private String name;
     private String url;

@@ -35,6 +35,9 @@ public class Memoir extends BasePostModel {
     @SerializedName("ratingScore")
     private double ratingScore;
 
+    @SerializedName("publicRating")
+    private double publicRating;
+
     @SerializedName("watchedTime")
     private String watchedTime;
 
@@ -108,6 +111,14 @@ public class Memoir extends BasePostModel {
 
     public double getRatingScore() {
         return ratingScore;
+    }
+
+    public double getPublicRating() {
+        return publicRating;
+    }
+
+    public void setPublicRating(double publicRating) {
+        this.publicRating = publicRating;
     }
 
     public void setWatchedTime(String watchedTime) {

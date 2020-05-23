@@ -32,6 +32,12 @@
         <item>ACT</item>
     </string-array>
 
+    <string-array name="sort_options">
+        <item>watching date</item>
+        <item>rating score</item>
+        <item>public rating</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="overview">Overview</string>

@@ -53,10 +53,11 @@ import java.util.List;
  */
 public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
 
-    public static final String MOVIE_ID="movie id";
+    public static final String MOVIE_ID = "movie id";
     public static final String MOVIE_NAME = "movie_name";
     public static final String MOVIE_RELEASE_DATE = "movie_release_date";
     public static final String MOVIE_IMAGE = "movie_image";
+    public static final String PUBLIC_RATING = "public rating";
     private View parentView;
     private ImageView movieImage;
     private TextView movieName;
@@ -235,7 +236,8 @@ public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
                     memoir.setWatchedTime(Values.REQUESTING_FORMAT.format(selectedWatchedDate.getTime()));
                     memoir.setMemoirComment(movieComment.getText().toString());
                     memoir.setMovieImage(getIntent().getStringExtra(MOVIE_IMAGE));
-                    memoir.setMovieId(getIntent().getIntExtra(MOVIE_ID,-1));
+                    memoir.setMovieId(getIntent().getIntExtra(MOVIE_ID, -1));
+                    memoir.setPublicRating(getIntent().getDoubleExtra(PUBLIC_RATING, 0.0));
                     requestRestfulService(MyMovieMemoirRestfulAPI.ADD_MOVIE_MEMOIR, memoir);
                     break;
                 case ADD_MOVIE_MEMOIR:

@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -37,18 +39,50 @@ public class RatingSelectView extends LinearLayout {
     }
 
     private void initView(Context context) {
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                generateImageViews(context);
+                setTouchListener();
+            }
+        });
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
+    private void generateImageViews(Context context) {
+        removeAllViews();
+        float r = rating;
         for (int i = 0; i < 5; i++) {
             ImageView imageView = new ImageView(context);
-            LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            int margin = (int) (context.getResources().getDisplayMetrics().density * 8);
-            layoutParams.setMargins(margin, margin, margin, margin);
-            imageView.setImageResource(R.drawable.baseline_star_border_black_48);
+            final LayoutParams layoutParams;
+            if (getLayoutParams().height > 0) {
+                layoutParams = new LayoutParams(getHeight(), getHeight());
+            } else {
+                layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            }
+            imageView.setLayoutParams(layoutParams);
+            if (r >= 1) {
+                imageView.setImageResource(R.drawable.baseline_star_black_48);
+            } else if (r > 0) {
+                imageView.setImageResource(R.drawable.baseline_star_half_black_48);
+            } else {
+                imageView.setImageResource(R.drawable.baseline_star_border_black_48);
+            }
+            r--;
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 imageView.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.secondaryColor)));
             }
             addView(imageView);
         }
-        this.setOnTouchListener((v, event) -> {
+    }
+
+    private void setTouchListener() {
+        setOnTouchListener((v, event) -> {
             rating = 0;
             for (int i = 0; i < getChildCount(); i++) {
                 ImageView imageView = (ImageView) getChildAt(i);
@@ -90,6 +124,11 @@ public class RatingSelectView extends LinearLayout {
 
     public float getRatingScore() {
         return rating;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
     }
 }
 
