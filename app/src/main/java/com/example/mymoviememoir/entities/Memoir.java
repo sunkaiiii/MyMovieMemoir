@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Memoir extends BasePostModel {
 
+    @SerializedName("movieId")
+    private int movieId;
+
     @SerializedName("watchedDate")
     private String watchedDate;
 
@@ -23,11 +26,25 @@ public class Memoir extends BasePostModel {
     @SerializedName("movieName")
     private String movieName;
 
+    @SerializedName("memoirComment")
+    private String memoirComment;
+
+    @SerializedName("movieImage")
+    private String movieImage;
+
     @SerializedName("ratingScore")
     private double ratingScore;
 
     @SerializedName("watchedTime")
     private String watchedTime;
+
+    public int getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(int movieId) {
+        this.movieId = movieId;
+    }
 
     public void setWatchedDate(String watchedDate) {
         this.watchedDate = watchedDate;
@@ -81,12 +98,28 @@ public class Memoir extends BasePostModel {
         this.ratingScore = ratingScore;
     }
 
+    public String getMovieImage() {
+        return movieImage;
+    }
+
+    public void setMovieImage(String movieImage) {
+        this.movieImage = movieImage;
+    }
+
     public double getRatingScore() {
         return ratingScore;
     }
 
     public void setWatchedTime(String watchedTime) {
         this.watchedTime = watchedTime;
+    }
+
+    public String getMemoirComment() {
+        return memoirComment;
+    }
+
+    public void setMemoirComment(String memoirComment) {
+        this.memoirComment = memoirComment;
     }
 
     public String getWatchedTime() {

@@ -53,6 +53,7 @@ import java.util.List;
  */
 public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
 
+    public static final String MOVIE_ID="movie id";
     public static final String MOVIE_NAME = "movie_name";
     public static final String MOVIE_RELEASE_DATE = "movie_release_date";
     public static final String MOVIE_IMAGE = "movie_image";
@@ -135,7 +136,7 @@ public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
 
     private void showDatePickerDialog(View v) {
         Calendar calendar = Calendar.getInstance();
-        new DatePickerDialog(this, this::handleOnDateSelected, calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
+        new DatePickerDialog(this, this::handleOnDateSelected, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     private void handleOnDateSelected(View v, int year, int month, int day) {
@@ -232,6 +233,9 @@ public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
                     memoir.setRatingScore(movieRate.getRatingScore());
                     memoir.setWatchedDate(Values.REQUESTING_FORMAT.format(selectedWatchedDate.getTime()));
                     memoir.setWatchedTime(Values.REQUESTING_FORMAT.format(selectedWatchedDate.getTime()));
+                    memoir.setMemoirComment(movieComment.getText().toString());
+                    memoir.setMovieImage(getIntent().getStringExtra(MOVIE_IMAGE));
+                    memoir.setMovieId(getIntent().getIntExtra(MOVIE_ID,-1));
                     requestRestfulService(MyMovieMemoirRestfulAPI.ADD_MOVIE_MEMOIR, memoir);
                     break;
                 case ADD_MOVIE_MEMOIR:
