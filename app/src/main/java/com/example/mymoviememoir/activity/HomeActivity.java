@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.example.mymoviememoir.R;
 import com.example.mymoviememoir.fragment.HomeFragment;
 import com.example.mymoviememoir.fragment.MainTopViewFragment;
+import com.example.mymoviememoir.fragment.MapsFragment;
 import com.example.mymoviememoir.fragment.MemoirFragment;
 import com.example.mymoviememoir.fragment.MovieSearchFragment;
 import com.example.mymoviememoir.fragment.ReportFragment;
@@ -92,7 +93,12 @@ public class HomeActivity extends BaseRequestRestfulServiceActivity implements N
                 }
                 break;
             case R.id.maps:
-                fragment = null;
+                if (fragmentMap.containsKey(R.layout.fragment_maps)) {
+                    fragment = fragmentMap.get(R.layout.fragment_maps);
+                } else {
+                    fragment = new MapsFragment();
+                    fragmentMap.put(R.layout.fragment_maps, fragment);
+                }
                 break;
             default:
                 fragment = null;

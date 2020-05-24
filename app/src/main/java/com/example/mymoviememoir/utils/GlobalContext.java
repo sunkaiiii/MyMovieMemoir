@@ -15,7 +15,6 @@ public class GlobalContext extends Application {
     public void onCreate() {
         super.onCreate();
         Instance = this;
-        Places.initialize(this,"Your API KEY");
     }
 
     public static Context getInstance() {

@@ -24,6 +24,7 @@ import com.example.mymoviememoir.utils.CredentialInfoUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
 import com.example.mymoviememoir.utils.PasswordUtils;
 import com.example.mymoviememoir.utils.PersonInfoUtils;
+import com.example.mymoviememoir.utils.Utils;
 import com.example.mymoviememoir.utils.Values;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -48,6 +49,7 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
     private TextInputEditText eFirstName;
     private TextInputEditText eLastName;
     private TextView tvShowBirthday;
+    private TextInputEditText eAddress;
     private TextInputEditText ePostcode;
     private TextInputEditText eEmail;
     private TextInputEditText ePassword;
@@ -72,6 +74,7 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
         ePassword = findViewById(R.id.e_password);
         eCheckedPassword = findViewById(R.id.e_checked_password);
         btnSelectBirthday = findViewById(R.id.btn_select_birthday);
+        eAddress = findViewById(R.id.e_address);
         genderGroup = findViewById(R.id.gender_group);
         spState = findViewById(R.id.sp_state);
         btnSelectBirthday.setOnClickListener(v -> new DatePickerDialog(SignUpActivity.this, (view, year, month, dayOfMonth) -> {
@@ -121,6 +124,7 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
         personRequest.setPostcode(ePostcode.getText().toString());
         personRequest.setSurname(eLastName.getText().toString());
         personRequest.setGender(getGenderEnumByRadioButton().genderSymbol);
+        personRequest.setAddress(eAddress.getText().toString());
         requestRestfulService(MyMovieMemoirRestfulAPI.SIGN_UP_PERSON, personRequest);
     }
 
@@ -182,6 +186,10 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
         }
         if (TextUtils.isEmpty(eCheckedPassword.getText())) {
             eCheckedPassword.setError("the password cannot be empty");
+            success = false;
+        }
+        if (Utils.isBlank(eAddress.getText())) {
+            eAddress.setError("The address cannot be empty");
             success = false;
         }
         if (!TextUtils.equals(eCheckedPassword.getText(), ePassword.getText()) && !TextUtils.isEmpty(ePassword.getText()) && !TextUtils.isEmpty(eCheckedPassword.getText())) {
