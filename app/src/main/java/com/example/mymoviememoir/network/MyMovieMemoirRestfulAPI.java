@@ -22,6 +22,7 @@ public enum MyMovieMemoirRestfulAPI implements RestfulAPI {
     GET_MEMOIR_BY_ID("getMemoirById", "/MovieMemoir/webresources/moviememoir.memoir/findByPersonId/", RequestType.GET),
     GET_MEMOIR_BY_ID_ORBER_BY_RATING_SCORE("getMemoirByIdOrderByRatingScore", "/MovieMemoir/webresources/moviememoir.memoir/findByPersonIdOrderByUserRating", RequestType.GET),
     GET_MEMOIR_BY_ID_ORDER_BY_PUBLIC_SCORE("getMemoirByIdOrderByPublicScore", "/MovieMemoir/webresources/moviememoir.memoir/findByPersonIdOrderByPublicRating", RequestType.GET),
+    GET_NUMBER_OF_CINEMAS_DURING_PERIOD_BY_PERSON_ID("findNumberOfCinemasDuringAPeridByPersonId", "/MovieMemoir/webresources/moviememoir.cinema/findNumberOfCinemasDuringAPeridByPersonID", RequestType.GET),
     ;
     private String name;
     private String url;

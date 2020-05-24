@@ -8,6 +8,9 @@ import com.example.mymoviememoir.entities.Memoir;
 
 import java.util.List;
 
+/**
+ * @author sunkai
+ */
 public class MemoirListModel extends ViewModel {
     private MutableLiveData<List<Memoir>> mMemoir;
 
@@ -15,8 +18,8 @@ public class MemoirListModel extends ViewModel {
         mMemoir = new MutableLiveData<>();
     }
 
-    public void setMemoirs(List<Memoir> person) {
-        mMemoir.setValue(person);
+    public void setMemoirs(List<Memoir> memoirs) {
+        mMemoir.setValue(memoirs);
     }
 
     public LiveData<List<Memoir>> getMemoir() {

@@ -17,6 +17,7 @@ import com.example.mymoviememoir.fragment.HomeFragment;
 import com.example.mymoviememoir.fragment.MainTopViewFragment;
 import com.example.mymoviememoir.fragment.MemoirFragment;
 import com.example.mymoviememoir.fragment.MovieSearchFragment;
+import com.example.mymoviememoir.fragment.ReportFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.HashMap;
@@ -75,16 +76,20 @@ public class HomeActivity extends BaseRequestRestfulServiceActivity implements N
 
                 break;
             case R.id.memoir:
-                if(fragmentMap.containsKey(R.layout.fragment_memoir)){
+                if (fragmentMap.containsKey(R.layout.fragment_memoir)) {
                     fragment = fragmentMap.get(R.layout.fragment_memoir);
-                }else{
+                } else {
                     fragment = new MemoirFragment();
-                    fragmentMap.put(R.layout.fragment_memoir,fragment);
+                    fragmentMap.put(R.layout.fragment_memoir, fragment);
                 }
-
                 break;
             case R.id.reports:
-                fragment = null;
+                if (fragmentMap.containsKey(R.layout.fragment_report)) {
+                    fragment = fragmentMap.get(R.layout.fragment_report);
+                } else {
+                    fragment = new ReportFragment();
+                    fragmentMap.put(R.layout.fragment_report, fragment);
+                }
                 break;
             case R.id.maps:
                 fragment = null;
@@ -93,7 +98,7 @@ public class HomeActivity extends BaseRequestRestfulServiceActivity implements N
                 fragment = null;
                 break;
         }
-        if(item.getItemId()!=R.id.home){
+        if (item.getItemId() != R.id.home) {
             fragmentTransaction.remove(topViewFragment);
         }
         if (fragment != null) {
