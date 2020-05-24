@@ -38,6 +38,16 @@
         <item>public rating</item>
     </string-array>
 
+    <string-array name="pie_years">
+        <item>Select a year</item>
+        <item>2015</item>
+        <item>2016</item>
+        <item>2017</item>
+        <item>2018</item>
+        <item>2019</item>
+        <item>2020</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="overview">Overview</string>

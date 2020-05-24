@@ -10,6 +10,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
+        <Spinner
+            android:id="@+id/pie_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/pie_years" />
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pie_chart"
+            android:layout_width="match_parent"
+            android:layout_height="400dp" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,14 +72,11 @@
                 app:layout_constraintTop_toTopOf="@+id/starting_date_tv" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/pie_chart"
-            android:layout_width="match_parent"
-            android:layout_height="400dp" />
-
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/bar_chart"
             android:layout_width="match_parent"
             android:layout_height="400dp" />
+
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
