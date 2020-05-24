@@ -6,16 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".fragment.MemoirFragment">
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/memoir_list"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/memoir_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/frameLayout"
@@ -32,8 +38,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:entries="@array/sort_options"
-            android:layout_margin="16dp" />
+            android:layout_margin="16dp"
+            android:entries="@array/sort_options" />
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

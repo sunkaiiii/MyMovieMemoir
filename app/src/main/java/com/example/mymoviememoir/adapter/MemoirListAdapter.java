@@ -98,6 +98,11 @@ public class MemoirListAdapter extends RecyclerView.Adapter<MemoirListAdapter.Me
 
     @Override
     public int getItemCount() {
-        return memoirs.size();
+        return memoirs == null ? 0 : memoirs.size();
+    }
+
+    public void setNewData(List<Memoir> newData) {
+        this.memoirs = newData;
+        notifyDataSetChanged();
     }
 }

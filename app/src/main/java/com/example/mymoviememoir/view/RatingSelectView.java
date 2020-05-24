@@ -51,20 +51,14 @@ public class RatingSelectView extends LinearLayout {
 
     public void setRating(float rating) {
         this.rating = rating;
+        generateImageViews(getContext());
     }
 
     private void generateImageViews(Context context) {
-        removeAllViews();
         float r = rating;
-        for (int i = 0; i < 5; i++) {
-            ImageView imageView = new ImageView(context);
-            final LayoutParams layoutParams;
-            if (getLayoutParams().height > 0) {
-                layoutParams = new LayoutParams(getHeight(), getHeight());
-            } else {
-                layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            }
-            imageView.setLayoutParams(layoutParams);
+        ImageView[] imageViews = getImageViews();
+        for (int i = 0; i < getChildCount(); i++) {
+            ImageView imageView = imageViews[i];
             if (r >= 1) {
                 imageView.setImageResource(R.drawable.baseline_star_black_48);
             } else if (r > 0) {
@@ -73,12 +67,34 @@ public class RatingSelectView extends LinearLayout {
                 imageView.setImageResource(R.drawable.baseline_star_border_black_48);
             }
             r--;
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 imageView.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.secondaryColor)));
             }
-            addView(imageView);
         }
+    }
+
+    private ImageView[] getImageViews() {
+        ImageView[] imageViews = new ImageView[5];
+        if (getChildCount() == 5) {
+            for (int i = 0; i < getChildCount(); i++) {
+                imageViews[i] = (ImageView) getChildAt(i);
+            }
+        } else {
+            for (int i = 0; i < 5; i++) {
+                ImageView imageView = new ImageView(getContext());
+                final LayoutParams layoutParams;
+                if (getLayoutParams().height > 0) {
+                    layoutParams = new LayoutParams(getLayoutParams().height, getLayoutParams().height);
+                } else {
+                    layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                }
+                imageView.setLayoutParams(layoutParams);
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                imageViews[i] = imageView;
+                addView(imageView);
+            }
+        }
+        return imageViews;
     }
 
     private void setTouchListener() {
