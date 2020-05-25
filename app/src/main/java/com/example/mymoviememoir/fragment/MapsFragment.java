@@ -1,7 +1,9 @@
 package com.example.mymoviememoir.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,45 +11,47 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
+import androidx.core.content.ContextCompat;
 
 import com.example.mymoviememoir.R;
+import com.example.mymoviememoir.entities.Memoir;
 import com.example.mymoviememoir.entities.Person;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
 import com.example.mymoviememoir.network.RequestHelper;
+import com.example.mymoviememoir.network.RestfulGetModel;
+import com.example.mymoviememoir.network.RestfulParameterModel;
 import com.example.mymoviememoir.network.reponse.GetAddressResponse;
 import com.example.mymoviememoir.network.reponse.Location;
 import com.example.mymoviememoir.network.request.GetAddressLATRequest;
-import com.example.mymoviememoir.network.request.base.BaseGoogleRequest;
-import com.example.mymoviememoir.utils.GlobalContext;
+import com.example.mymoviememoir.network.request.GetCinemaLATRequest;
 import com.example.mymoviememoir.utils.GsonUtils;
 import com.example.mymoviememoir.utils.PersonInfoUtils;
+import com.example.mymoviememoir.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
-import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
-import com.google.android.libraries.places.api.net.PlacesClient;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 
 /**
- * A simple {@link Fragment} subclass.
+ * @author sunkai
  */
 public class MapsFragment extends BaseRequestRestfulServiceFragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private Location location;
+
+    private Bitmap cinemaBitmap;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -70,44 +74,88 @@ public class MapsFragment extends BaseRequestRestfulServiceFragment implements O
                 mapFragment.getMapAsync(this);
             }
         }
+        generateCinemaBitmap();
         getUserAddress();
+    }
+
+    private void generateCinemaBitmap() {
+        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.baseline_movie_white_24);
+        if (drawable instanceof BitmapDrawable) {
+            cinemaBitmap = Utils.tintBitmap(((BitmapDrawable) drawable).getBitmap(), ContextCompat.getColor(getContext(), R.color.primaryColor));
+        }
     }
 
     private void getUserAddress() {
         final Person person = PersonInfoUtils.getPersonInstance();
         final String address = String.format("%s,%s,%s", person.getAddress().replace(' ', '+'), person.getState(), person.getPostcode());
         requestRestfulService(MyMovieMemoirRestfulAPI.GET_ADDRESS_LAT, new GetAddressLATRequest(address));
+        requestRestfulService(MyMovieMemoirRestfulAPI.GET_MEMOIR_BY_ID, (RestfulGetModel) () -> Collections.singletonList(String.valueOf(PersonInfoUtils.getPersonInstance().getId())));
     }
 
     @Override
     public void onPostExecute(RequestHelper helper, String response) {
         super.onPostExecute(helper, response);
-        switch (helper.getRestfulAPI()) {
-            case GET_ADDRESS_LAT:
-                GetAddressResponse addressResponse = GsonUtils.fromJsonToObject(response, GetAddressResponse.class);
-                if (!TextUtils.equals(addressResponse.getStatus(), "OK") || addressResponse.getResults().size() == 0) {
-                    return;
-                }
-                location = addressResponse.getResults().get(0).getGeometry().getLocation();
-                tryToSetMyLocation();
-                break;
-            default:
-                break;
+        try {
+
+
+            switch (helper.getRestfulAPI()) {
+                case GET_ADDRESS_LAT:
+                    GetAddressResponse addressResponse = GsonUtils.fromJsonToObject(response, GetAddressResponse.class);
+                    if (!TextUtils.equals(addressResponse.getStatus(), "OK") || addressResponse.getResults().size() == 0) {
+                        return;
+                    }
+                    location = addressResponse.getResults().get(0).getGeometry().getLocation();
+                    tryToSetMyLocation(location, helper.getPathRequestModel());
+                    break;
+                case GET_MEMOIR_BY_ID:
+                    List<Memoir> memoirs = GsonUtils.fromJsonToList(response, Memoir.class);
+                    Map<String, Set<String>> cinemaMap = new HashMap<>();
+                    for (Memoir memoir : memoirs) {
+                        if (!cinemaMap.containsKey(memoir.getCinemaId().getCinemaName())) {
+                            cinemaMap.put(memoir.getCinemaId().getCinemaName(), new HashSet<>());
+                        }
+                        cinemaMap.get(memoir.getCinemaId().getCinemaName()).add(memoir.getCinemaId().getLocationSuburb());
+                    }
+                    for (Map.Entry<String, Set<String>> entry : cinemaMap.entrySet()) {
+                        for (String postCode : entry.getValue()) {
+                            requestRestfulService(MyMovieMemoirRestfulAPI.GET_ADDRESS_LAT, new GetCinemaLATRequest(entry.getKey(), postCode));
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private void tryToSetMyLocation() {
+    private void tryToSetMyLocation(Location location, RestfulParameterModel pathRequestModel) {
         if (mMap == null || location == null) {
             return;
         }
         LatLng latLng = new LatLng(location.getLat(), location.getLng());
-        mMap.addMarker(new MarkerOptions().position(latLng).title("Home"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+        if (pathRequestModel instanceof GetAddressLATRequest) {
+            mMap.addMarker(new MarkerOptions().position(latLng).title("Home"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+        } else {
+            GetCinemaLATRequest requestModel = (GetCinemaLATRequest) pathRequestModel;
+            mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromBitmap(cinemaBitmap)).title(String.format("%s, %s", requestModel.getCinemaName(), requestModel.getCinemaSuburb())));
+        }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        tryToSetMyLocation();
+        tryToSetMyLocation(location, null);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (cinemaBitmap != null) {
+            cinemaBitmap.recycle();
+            cinemaBitmap = null;
+        }
     }
 }
