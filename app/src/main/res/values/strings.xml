@@ -61,4 +61,5 @@
     <string name="starting_date">Starting date</string>
     <string name="ending_date">Ending date</string>
     <string name="address">Address</string>
+    <string name="user_attitude">User Attitude</string>
 </resources>

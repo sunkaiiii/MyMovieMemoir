@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -15,12 +14,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -38,6 +37,7 @@ import com.example.mymoviememoir.network.reponse.MovieDetailResponse;
 import com.example.mymoviememoir.network.request.GetMovieDetailRequest;
 import com.example.mymoviememoir.utils.ColorUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +66,8 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
     private TextView productContryAndStatus;
 
     private MovieDetailResponse movieDetailResponse;
+    private ViewPager2 userAttitudeViewPager;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +106,8 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
         addMemoir.setOnClickListener(this);
         addWatchList.setOnClickListener(this);
         productContryAndStatus = findViewById(R.id.product_contry_and_status);
+        userAttitudeViewPager = findViewById(R.id.user_attitude_view_pager);
+        tabLayout = findViewById(R.id.tab_layout);
     }
 
     @Override
@@ -216,8 +220,8 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
                 intent.putExtra(AddMemoirActivity.MOVIE_NAME, movieDetailResponse.getTitle());
                 intent.putExtra(AddMemoirActivity.MOVIE_IMAGE, RequestHost.MOVIE_DB_IMAGE_HOST.getHostUrl() + movieDetailResponse.getPosterPath());
                 intent.putExtra(AddMemoirActivity.MOVIE_RELEASE_DATE, movieDetailResponse.getReleaseDate());
-                intent.putExtra(AddMemoirActivity.MOVIE_ID,id);
-                intent.putExtra(AddMemoirActivity.PUBLIC_RATING,movieDetailResponse.getVoteAverage());
+                intent.putExtra(AddMemoirActivity.MOVIE_ID, id);
+                intent.putExtra(AddMemoirActivity.PUBLIC_RATING, movieDetailResponse.getVoteAverage());
                 startActivity(intent);
                 break;
             case R.id.add_watch_list:

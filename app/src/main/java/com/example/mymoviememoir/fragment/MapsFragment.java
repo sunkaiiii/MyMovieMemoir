@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.example.mymoviememoir.R;
+import com.example.mymoviememoir.entities.Cinema;
 import com.example.mymoviememoir.entities.Memoir;
 import com.example.mymoviememoir.entities.Person;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
@@ -35,11 +36,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 
@@ -89,7 +92,7 @@ public class MapsFragment extends BaseRequestRestfulServiceFragment implements O
         final Person person = PersonInfoUtils.getPersonInstance();
         final String address = String.format("%s,%s,%s", person.getAddress().replace(' ', '+'), person.getState(), person.getPostcode());
         requestRestfulService(MyMovieMemoirRestfulAPI.GET_ADDRESS_LAT, new GetAddressLATRequest(address));
-        requestRestfulService(MyMovieMemoirRestfulAPI.GET_MEMOIR_BY_ID, (RestfulGetModel) () -> Collections.singletonList(String.valueOf(PersonInfoUtils.getPersonInstance().getId())));
+        requestRestfulService(MyMovieMemoirRestfulAPI.GET_ALL_CINEMA, (RestfulGetModel) ArrayList::new);
     }
 
     @Override
@@ -107,19 +110,10 @@ public class MapsFragment extends BaseRequestRestfulServiceFragment implements O
                     location = addressResponse.getResults().get(0).getGeometry().getLocation();
                     tryToSetMyLocation(location, helper.getPathRequestModel());
                     break;
-                case GET_MEMOIR_BY_ID:
-                    List<Memoir> memoirs = GsonUtils.fromJsonToList(response, Memoir.class);
-                    Map<String, Set<String>> cinemaMap = new HashMap<>();
-                    for (Memoir memoir : memoirs) {
-                        if (!cinemaMap.containsKey(memoir.getCinemaId().getCinemaName())) {
-                            cinemaMap.put(memoir.getCinemaId().getCinemaName(), new HashSet<>());
-                        }
-                        cinemaMap.get(memoir.getCinemaId().getCinemaName()).add(memoir.getCinemaId().getLocationSuburb());
-                    }
-                    for (Map.Entry<String, Set<String>> entry : cinemaMap.entrySet()) {
-                        for (String postCode : entry.getValue()) {
-                            requestRestfulService(MyMovieMemoirRestfulAPI.GET_ADDRESS_LAT, new GetCinemaLATRequest(entry.getKey(), postCode));
-                        }
+                case GET_ALL_CINEMA:
+                    List<Cinema> cinemas = GsonUtils.fromJsonToList(response, Cinema.class);
+                    for (Cinema cinema : cinemas) {
+                        requestRestfulService(MyMovieMemoirRestfulAPI.GET_ADDRESS_LAT, new GetCinemaLATRequest(cinema.getCinemaName(), cinema.getLocationSuburb()));
                     }
                     break;
                 default:
@@ -134,11 +128,14 @@ public class MapsFragment extends BaseRequestRestfulServiceFragment implements O
         if (mMap == null || location == null) {
             return;
         }
-        LatLng latLng = new LatLng(location.getLat(), location.getLng());
+
         if (pathRequestModel instanceof GetAddressLATRequest) {
+            LatLng latLng = new LatLng(location.getLat(), location.getLng());
             mMap.addMarker(new MarkerOptions().position(latLng).title("Home"));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         } else {
+            //Adding a random number to make a slight movement of the icon to avoid cinemas from the same suburb overlapping in the map.
+            LatLng latLng = new LatLng(location.getLat() + Math.random()/100.0, location.getLng() + Math.random()/100.0);
             GetCinemaLATRequest requestModel = (GetCinemaLATRequest) pathRequestModel;
             mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromBitmap(cinemaBitmap)).title(String.format("%s, %s", requestModel.getCinemaName(), requestModel.getCinemaSuburb())));
         }

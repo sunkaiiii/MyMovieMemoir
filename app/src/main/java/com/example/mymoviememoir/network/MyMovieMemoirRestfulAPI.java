@@ -25,6 +25,7 @@ public enum MyMovieMemoirRestfulAPI implements RestfulAPI {
     GET_NUMBER_OF_CINEMAS_DURING_PERIOD_BY_PERSON_ID("findNumberOfCinemasDuringAPeridByPersonId", "/MovieMemoir/webresources/moviememoir.cinema/findNumberOfCinemasDuringAPeridByPersonID", RequestType.GET),
     FIND_NUMBER_OF_PERSON_WATCHED_MOVIE_OF_A_YEAR("findNumberOfPersonWatchedOfAYear","/MovieMemoir/webresources/moviememoir.memoir/findNumberOfPersonWatchedOfAYear",RequestType.GET),
     GET_ADDRESS_LAT("getAddressLAT","/maps/api/geocode/json",RequestType.GET,RequestHost.GOOGLE_MAPS),
+    GET_ALL_CINEMA("getAllCinema","/MovieMemoir/webresources/moviememoir.cinema",RequestType.GET),
     ;
     private String name;
     private String url;

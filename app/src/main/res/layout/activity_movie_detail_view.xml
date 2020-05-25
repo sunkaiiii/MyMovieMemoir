@@ -103,10 +103,10 @@
             app:layout_constraintTop_toBottomOf="@+id/movie_image" />
 
         <LinearLayout
+            android:id="@+id/over_view_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
             android:background="@drawable/movie_detail_content_background"
             android:orientation="vertical"
             android:padding="16dp"
@@ -213,5 +213,36 @@
             app:layout_constraintStart_toStartOf="@+id/movie_genre"
             app:layout_constraintTop_toBottomOf="@+id/movie_genre" />
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/movie_detail_content_background"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="@+id/over_view_layout"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/over_view_layout"
+            app:layout_constraintTop_toBottomOf="@id/over_view_layout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_attitude"
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="top" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/user_attitude_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
