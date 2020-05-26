@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -29,19 +31,31 @@ import com.bumptech.glide.request.target.Target;
 import com.example.mymoviememoir.R;
 import com.example.mymoviememoir.adapter.MovieCrewAdapter;
 import com.example.mymoviememoir.adapter.MovieDetailCastAdapter;
+import com.example.mymoviememoir.adapter.UserAttitudeViewPagerAdapter;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
 import com.example.mymoviememoir.network.RequestHelper;
 import com.example.mymoviememoir.network.RequestHost;
 import com.example.mymoviememoir.network.reponse.MovieCastResponse;
 import com.example.mymoviememoir.network.reponse.MovieDetailResponse;
+import com.example.mymoviememoir.network.reponse.SearchTwtitterResponse;
+import com.example.mymoviememoir.network.reponse.StatusesItem;
 import com.example.mymoviememoir.network.request.GetMovieDetailRequest;
+import com.example.mymoviememoir.network.request.twitter.QueryTwitterRequest;
+import com.example.mymoviememoir.network.request.twitter.TwitterSessionRequest;
+import com.example.mymoviememoir.utils.BagOfWordsUtils;
 import com.example.mymoviememoir.utils.ColorUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
+import com.example.mymoviememoir.utils.Utils;
+import com.example.mymoviememoir.utils.Values;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity implements View.OnClickListener {
 
@@ -80,7 +94,6 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
         if (id != -1) {
             requestRestfulService(MyMovieMemoirRestfulAPI.GET_MOVIE_DETAIL, new GetMovieDetailRequest(id));
         }
-
     }
 
     private void initView() {
@@ -124,6 +137,27 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
                     MovieCastResponse castResponse = GsonUtils.fromJsonToObject(response, MovieCastResponse.class);
                     recyclerView.setAdapter(new MovieDetailCastAdapter(castResponse.getCast()));
                     crewRecyclerView.setAdapter(new MovieCrewAdapter(castResponse.getCrew().subList(0, 10)));
+                    if (!Utils.isBlank(Values.TWITTER_SESSION)) {
+                        requestTwitterQuery();
+                    } else {
+                        requestRestfulService(MyMovieMemoirRestfulAPI.GET_TWITTER_TOKEN, new TwitterSessionRequest());
+                    }
+                    break;
+                case GET_TWITTER_TOKEN:
+                    Log.d("twitter_token", response);
+                    if (!Utils.isBlank(response)) {
+                        JsonObject jsonObject = GsonUtils.fromJsonToObject(response, JsonObject.class);
+                        Values.TWITTER_SESSION = jsonObject.get("access_token").getAsString();
+                        requestTwitterQuery();
+                    }
+                    break;
+                case SEARCH_TWITTER:
+                    Log.d("twitter_searching", response);
+                    if (Utils.isBlank(response)) {
+                        return;
+                    }
+                    SearchTwtitterResponse searchTwtitterResponse = GsonUtils.fromJsonToObject(response, SearchTwtitterResponse.class);
+                    processText(searchTwtitterResponse);
                     break;
                 default:
                     break;
@@ -131,6 +165,12 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private void requestTwitterQuery() {
+        QueryTwitterRequest queryTwitterRequest = new QueryTwitterRequest(String.format("#%s", movieDetailResponse.getTitle()), Values.TWITTER_SESSION);
+        requestRestfulService(MyMovieMemoirRestfulAPI.SEARCH_TWITTER, queryTwitterRequest);
     }
 
     private void requestCasts() {
@@ -207,6 +247,18 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
             }
             movieRatingLayout.addView(ratingImage);
         }
+    }
+
+    private void processText(SearchTwtitterResponse searchTwtitterResponse) {
+        BagOfWordsUtils.requestGetPositiveAndNegativeData(this, (positiveWords, negativeWords) -> {
+            Map<BagOfWordsUtils.Classification, ArrayList<StatusesItem>> divisionResult = BagOfWordsUtils.makeStringDivision(searchTwtitterResponse.getStatuses(), positiveWords, negativeWords);
+            setDividedDataIntoViewPager(divisionResult);
+        });
+    }
+
+    private void setDividedDataIntoViewPager(Map<BagOfWordsUtils.Classification, ArrayList<StatusesItem>> divisionResult) {
+        userAttitudeViewPager.setAdapter(new UserAttitudeViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), divisionResult));
+        new TabLayoutMediator(tabLayout, userAttitudeViewPager, (tab, position) -> tab.setText(BagOfWordsUtils.Classification.values()[position].toString())).attach();
     }
 
     @Override

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mymoviememoir.R;
 import com.example.mymoviememoir.adapter.UserCommentAdapter;
+import com.example.mymoviememoir.network.reponse.StatusesItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,16 +20,16 @@ import java.util.List;
 public class UserAttitudeFragment extends Fragment {
     public static final String COMMENTS = "comments";
 
-    public static UserAttitudeFragment newInstance(ArrayList<String> comments) {
+    public static UserAttitudeFragment newInstance(ArrayList<StatusesItem> comments) {
 
         Bundle args = new Bundle();
-        args.putStringArrayList(COMMENTS, comments);
+        args.putParcelableArrayList(COMMENTS, comments);
         UserAttitudeFragment fragment = new UserAttitudeFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    private List<String> comments;
+    private ArrayList<StatusesItem> comments;
     private RecyclerView recyclerView;
 
     @Nullable
@@ -40,7 +41,7 @@ public class UserAttitudeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        comments = getArguments().getStringArrayList(COMMENTS);
+        comments = getArguments().getParcelableArrayList(COMMENTS);
         initView(view);
     }
 

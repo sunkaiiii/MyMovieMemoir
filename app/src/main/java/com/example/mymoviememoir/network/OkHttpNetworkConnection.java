@@ -76,6 +76,10 @@ public class OkHttpNetworkConnection {
                 requestBuilder.delete();
                 break;
         }
+
+        for (Map.Entry<String, String> header : requestModel.getHeader().entrySet()) {
+            requestBuilder.addHeader(header.getKey(), header.getValue());
+        }
         Log.d("Network Request", helper.getRestfulAPI().getRequestName() + ": " + restfulRequestUrl.build().toString());
         if (body != null) {
             Log.d("Network Request", helper.getBodyRequestModel().getBodyParameterJson());

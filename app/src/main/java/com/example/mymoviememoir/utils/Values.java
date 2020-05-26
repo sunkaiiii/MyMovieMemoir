@@ -10,7 +10,8 @@ public class Values {
     public static final String CREDENTIALS = "credentials";
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT_US = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    public static final SimpleDateFormat REQUESTING_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX",Locale.getDefault());
-    public static final SimpleDateFormat RESPONSE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss",Locale.getDefault());
+    public static final SimpleDateFormat REQUESTING_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault());
+    public static final SimpleDateFormat RESPONSE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
     public static final SimpleDateFormat MAIN_FRAGMENT_DISPLAY_TIME_FORMAT = new SimpleDateFormat("d MMM yyyy  EEE");
+    public static String TWITTER_SESSION = "";
 }

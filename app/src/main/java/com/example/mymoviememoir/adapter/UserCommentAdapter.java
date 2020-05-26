@@ -8,15 +8,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.request.transition.Transition;
 import com.example.mymoviememoir.R;
+import com.example.mymoviememoir.network.reponse.StatusesItem;
 
 import java.util.List;
 
+/**
+ * @author sunkai
+ */
 public class UserCommentAdapter extends RecyclerView.Adapter<UserCommentAdapter.CommentViewHolder> {
-    private List<String> comments;
+    private List<StatusesItem> comments;
 
-    public UserCommentAdapter(List<String> comments) {
+    public UserCommentAdapter(List<StatusesItem> comments) {
         this.comments = comments;
     }
 
@@ -38,7 +41,7 @@ public class UserCommentAdapter extends RecyclerView.Adapter<UserCommentAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
-        String comment = comments.get(position);
+        String comment = comments.get(position).getText();
         holder.comment.setText(comment);
     }
 
