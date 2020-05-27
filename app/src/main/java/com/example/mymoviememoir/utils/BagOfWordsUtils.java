@@ -90,9 +90,9 @@ public final class BagOfWordsUtils {
                     value--;
                 }
             }
-            if (value >= 2) {
+            if (value >0) {
                 result.get(Classification.POSITIVE).add(item);
-            } else if (value <= 2) {
+            } else if (value < 0) {
                 result.get(Classification.NEGATIVE).add(item);
             } else {
                 result.get(Classification.NEUTRAL).add(item);
