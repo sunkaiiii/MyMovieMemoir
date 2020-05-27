@@ -151,6 +151,7 @@
                 android:background="@drawable/movie_detail_button_drawable">
 
                 <TextView
+                    android:id="@+id/add_watch_list_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -224,10 +225,12 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/over_view_layout"
             app:layout_constraintHorizontal_bias="0.0"
+            tools:visibility="visible"
             app:layout_constraintStart_toStartOf="@+id/over_view_layout"
             app:layout_constraintTop_toBottomOf="@id/over_view_layout">
 
             <TextView
+                android:id="@+id/user_attitude"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/user_attitude"
@@ -239,7 +242,8 @@
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top" />
+                android:layout_gravity="top"
+                app:tabTextColor="@android:color/white" />
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/user_attitude_view_pager"

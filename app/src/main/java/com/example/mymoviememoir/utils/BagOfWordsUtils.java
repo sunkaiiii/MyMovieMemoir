@@ -44,6 +44,7 @@ public final class BagOfWordsUtils {
     public static synchronized void requestGetPositiveAndNegativeData(Context context, @NonNull OnWordsLoadSuccessListener listener) {
         if (positiveWords != null && negativeWords != null) {
             listener.onLoadSuccess(positiveWords, negativeWords);
+            return;
         }
         new Thread(() -> {
             try {

@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,6 +42,9 @@ import com.example.mymoviememoir.network.reponse.StatusesItem;
 import com.example.mymoviememoir.network.request.GetMovieDetailRequest;
 import com.example.mymoviememoir.network.request.twitter.QueryTwitterRequest;
 import com.example.mymoviememoir.network.request.twitter.TwitterSessionRequest;
+import com.example.mymoviememoir.room.entity.WatchList;
+import com.example.mymoviememoir.room.model.WatchListViewModel;
+import com.example.mymoviememoir.room.repository.WatchListRepository;
 import com.example.mymoviememoir.utils.BagOfWordsUtils;
 import com.example.mymoviememoir.utils.ColorUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
@@ -51,6 +55,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -81,6 +86,11 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
     private ViewPager2 userAttitudeViewPager;
     private TabLayout tabLayout;
     private LinearLayout movieCommentLayout;
+    private TextView userAttitude;
+
+
+    private WatchListViewModel watchListViewModel;
+    private TextView addWatchListText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +131,10 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
         userAttitudeViewPager = findViewById(R.id.user_attitude_view_pager);
         tabLayout = findViewById(R.id.tab_layout);
         movieCommentLayout = findViewById(R.id.movie_comment_layout);
+        userAttitude = findViewById(R.id.user_attitude);
+        watchListViewModel = new ViewModelProvider(this).get(WatchListViewModel.class);
+        watchListViewModel.initalizeVars(getApplication());
+        addWatchListText = findViewById(R.id.add_watch_list_text);
     }
 
     @Override
@@ -132,6 +146,7 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
                     movieDetailResponse = GsonUtils.fromJsonToObject(response, MovieDetailResponse.class);
                     fillInfoToView(movieDetailResponse);
                     requestCasts();
+                    getWatchListInformationFromDatabase(movieDetailResponse);
                     break;
                 case GET_MOVIE_CREDITS:
                     MovieCastResponse castResponse = GsonUtils.fromJsonToObject(response, MovieCastResponse.class);
@@ -165,6 +180,27 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void getWatchListInformationFromDatabase(MovieDetailResponse movieDetailResponse) {
+        int movieId = movieDetailResponse.getId();
+        watchListViewModel.findById(movieId, new WatchListRepository.OnFindSuccessListener<WatchList>() {
+            @Override
+            public void onSuccess(WatchList watchList) {
+                if (watchList != null) {
+                    addWatchListText.setText("Already In Watch List");
+                    addWatchList.setEnabled(false);
+                } else {
+                    addWatchList.setOnClickListener((v) -> {
+                        watchListViewModel.insert(new WatchList(movieDetailResponse.getId(), movieDetailResponse.getTitle(), movieDetailResponse.getReleaseDate(), Values.SIMPLE_DATE_FORMAT.format(Calendar.getInstance().getTime())));
+                        addWatchListText.setText("Already In Watch List");
+                        addWatchListText.setOnClickListener(null);
+                        addWatchListText.setEnabled(false);
+                    });
+                }
+
+            }
+        });
     }
 
 
@@ -260,6 +296,25 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
         movieCommentLayout.setVisibility(View.VISIBLE);
         userAttitudeViewPager.setAdapter(new UserAttitudeViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), divisionResult));
         new TabLayoutMediator(tabLayout, userAttitudeViewPager, (tab, position) -> tab.setText(BagOfWordsUtils.Classification.values()[position].toString())).attach();
+        BagOfWordsUtils.Classification maxAttituteClass = null;
+        for (Map.Entry<BagOfWordsUtils.Classification, ArrayList<StatusesItem>> entry : divisionResult.entrySet()) {
+            if (maxAttituteClass == null) {
+                maxAttituteClass = entry.getKey();
+            } else if (divisionResult.get(maxAttituteClass).size() < entry.getValue().size()) {
+                maxAttituteClass = entry.getKey();
+            }
+        }
+        userAttitude.setText(String.format("%s: %s", userAttitude.getText().toString(), maxAttituteClass.toString()));
+        int i = 0;
+        for (; i < BagOfWordsUtils.Classification.values().length; i++) {
+            if (BagOfWordsUtils.Classification.values()[i] == maxAttituteClass) {
+                break;
+            }
+        }
+        final int index = i;
+        userAttitudeViewPager.post(() -> {
+            userAttitudeViewPager.setCurrentItem(index);
+        });
     }
 
     @Override
@@ -283,4 +338,5 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
                 break;
         }
     }
+
 }
