@@ -214,12 +214,14 @@
             app:layout_constraintTop_toBottomOf="@+id/movie_genre" />
 
         <LinearLayout
+            android:id="@+id/movie_comment_layout"
             android:layout_width="0dp"
-            android:layout_height="300dp"
+            android:layout_height="550dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/movie_detail_content_background"
             android:orientation="vertical"
             android:padding="16dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/over_view_layout"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/over_view_layout"
@@ -242,7 +244,7 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/user_attitude_view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

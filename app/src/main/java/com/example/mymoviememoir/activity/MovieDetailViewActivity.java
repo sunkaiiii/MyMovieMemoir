@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -55,7 +54,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity implements View.OnClickListener {
 
@@ -82,6 +80,7 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
     private MovieDetailResponse movieDetailResponse;
     private ViewPager2 userAttitudeViewPager;
     private TabLayout tabLayout;
+    private LinearLayout movieCommentLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +120,7 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
         productContryAndStatus = findViewById(R.id.product_contry_and_status);
         userAttitudeViewPager = findViewById(R.id.user_attitude_view_pager);
         tabLayout = findViewById(R.id.tab_layout);
+        movieCommentLayout = findViewById(R.id.movie_comment_layout);
     }
 
     @Override
@@ -169,7 +169,7 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
 
 
     private void requestTwitterQuery() {
-        QueryTwitterRequest queryTwitterRequest = new QueryTwitterRequest(String.format("#%s", movieDetailResponse.getTitle()), Values.TWITTER_SESSION);
+        QueryTwitterRequest queryTwitterRequest = new QueryTwitterRequest(String.format("\"%s\" movie", movieDetailResponse.getTitle()), Values.TWITTER_SESSION);
         requestRestfulService(MyMovieMemoirRestfulAPI.SEARCH_TWITTER, queryTwitterRequest);
     }
 
@@ -251,12 +251,13 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
 
     private void processText(SearchTwtitterResponse searchTwtitterResponse) {
         BagOfWordsUtils.requestGetPositiveAndNegativeData(this, (positiveWords, negativeWords) -> {
-            Map<BagOfWordsUtils.Classification, ArrayList<StatusesItem>> divisionResult = BagOfWordsUtils.makeStringDivision(searchTwtitterResponse.getStatuses(), positiveWords, negativeWords);
+            Map<BagOfWordsUtils.Classification, ArrayList<StatusesItem>> divisionResult = BagOfWordsUtils.makeStringDivision(searchTwtitterResponse.getStatuses(), movieDetailResponse.getTitle(), positiveWords, negativeWords);
             setDividedDataIntoViewPager(divisionResult);
         });
     }
 
     private void setDividedDataIntoViewPager(Map<BagOfWordsUtils.Classification, ArrayList<StatusesItem>> divisionResult) {
+        movieCommentLayout.setVisibility(View.VISIBLE);
         userAttitudeViewPager.setAdapter(new UserAttitudeViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), divisionResult));
         new TabLayoutMediator(tabLayout, userAttitudeViewPager, (tab, position) -> tab.setText(BagOfWordsUtils.Classification.values()[position].toString())).attach();
     }

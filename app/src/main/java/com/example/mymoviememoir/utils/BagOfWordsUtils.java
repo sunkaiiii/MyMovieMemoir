@@ -52,10 +52,16 @@ public final class BagOfWordsUtils {
                 InputStream positiveFile = context.getResources().getAssets().open("positive-words.txt");
                 InputStream negativeFile = context.getResources().getAssets().open("negative-words.txt");
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(positiveFile))) {
-                    pWords.add(reader.readLine());
+                    String read;
+                    while ((read = reader.readLine()) != null) {
+                        pWords.add(read);
+                    }
                 }
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(negativeFile))) {
-                    nWords.add(reader.readLine());
+                    String read;
+                    while ((read = reader.readLine()) != null) {
+                        nWords.add(read);
+                    }
                 }
                 new Handler(Looper.getMainLooper()).post(() -> {
                     positiveWords = pWords;
@@ -68,7 +74,7 @@ public final class BagOfWordsUtils {
         }).start();
     }
 
-    public static Map<Classification, ArrayList<StatusesItem>> makeStringDivision(List<StatusesItem> sentense, Set<String> positiveWords, Set<String> negativeWords) {
+    public static Map<Classification, ArrayList<StatusesItem>> makeStringDivision(List<StatusesItem> sentense, String movieName, Set<String> positiveWords, Set<String> negativeWords) {
         Map<Classification, ArrayList<StatusesItem>> result = new HashMap<>();
         for (Classification classification : Classification.values()) {
             result.put(classification, new ArrayList<>());
@@ -77,6 +83,7 @@ public final class BagOfWordsUtils {
             String[] words = item.getText().split(" ");
             int value = 0;
             for (String word : words) {
+                word = word.replace(movieName, "");
                 if (positiveWords.contains(word)) {
                     value++;
                 } else if (negativeWords.contains(word)) {

@@ -40,7 +40,8 @@ public class QueryTwitterRequest implements RestfulGetModel {
     public Map<String, String> getQueryGetParameter() {
         Map<String, String> map = new HashMap<>();
         map.put("q", q);
-        map.put("lang","en");
+        map.put("lang", "en");
+        map.put("result_type", "mixed");
         return map;
     }
 }
