@@ -66,7 +66,7 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
     public static final String RELEASE_DATE = "release_date";
     public static final String ID = "id";
 
-    private int id;
+    private String id;
     private ImageView movieImage;
     private View mainView;
     private TextView movieName;
@@ -99,8 +99,8 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
         initView();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        id = getIntent().getIntExtra(ID, -1);
-        if (id != -1) {
+        id = getIntent().getStringExtra(ID);
+        if (!Utils.isBlank(id)) {
             requestRestfulService(MyMovieMemoirRestfulAPI.GET_MOVIE_DETAIL, new GetMovieDetailRequest(id));
         }
     }
@@ -183,23 +183,23 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
     }
 
     private void getWatchListInformationFromDatabase(MovieDetailResponse movieDetailResponse) {
-        int movieId = movieDetailResponse.getId();
-        watchListViewModel.findById(movieId, new WatchListRepository.OnFindSuccessListener<WatchList>() {
-            @Override
-            public void onSuccess(WatchList watchList) {
-                if (watchList != null) {
+        String movieId = movieDetailResponse.getId();
+        watchListViewModel.findById(movieId, watchList -> {
+            if (watchList != null) {
+                addWatchListText.setText("Already In Watch List");
+                addWatchList.setEnabled(false);
+            } else {
+                addWatchList.setOnClickListener((v) -> {
+                    watchListViewModel.insert(new WatchList(movieDetailResponse.getId()
+                            , movieDetailResponse.getTitle()
+                            , movieDetailResponse.getReleaseDate(), Values.SIMPLE_DATE_FORMAT.format(Calendar.getInstance().getTime())
+                            , RequestHost.MOVIE_DB_IMAGE_HOST.getHostUrl() + movieDetailResponse.getPosterPath()));
                     addWatchListText.setText("Already In Watch List");
-                    addWatchList.setEnabled(false);
-                } else {
-                    addWatchList.setOnClickListener((v) -> {
-                        watchListViewModel.insert(new WatchList(movieDetailResponse.getId(), movieDetailResponse.getTitle(), movieDetailResponse.getReleaseDate(), Values.SIMPLE_DATE_FORMAT.format(Calendar.getInstance().getTime())));
-                        addWatchListText.setText("Already In Watch List");
-                        addWatchListText.setOnClickListener(null);
-                        addWatchListText.setEnabled(false);
-                    });
-                }
-
+                    addWatchListText.setOnClickListener(null);
+                    addWatchListText.setEnabled(false);
+                });
             }
+
         });
     }
 

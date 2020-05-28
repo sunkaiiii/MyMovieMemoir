@@ -19,7 +19,7 @@ public interface WatchListDAO {
     LiveData<List<WatchList>> getAll();
 
     @Query("SELECT * FROM WatchList WHERE modie_id=:movieId LIMIT 1")
-    WatchList findById(int movieId);
+    WatchList findById(String movieId);
 
     @Insert
     void insertAll(WatchList... watchLists);

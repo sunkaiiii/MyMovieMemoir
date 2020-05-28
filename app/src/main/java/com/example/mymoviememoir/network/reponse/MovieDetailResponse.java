@@ -15,7 +15,7 @@ public class MovieDetailResponse{
 	private String backdropPath;
 
 	@SerializedName("revenue")
-	private int revenue;
+	private long revenue;
 
 	@SerializedName("genres")
 	private List<GenresItem> genres;
@@ -27,7 +27,7 @@ public class MovieDetailResponse{
 	private List<ProductionCountriesItem> productionCountries;
 
 	@SerializedName("id")
-	private int id;
+	private String id;
 
 	@SerializedName("vote_count")
 	private int voteCount;
@@ -86,7 +86,7 @@ public class MovieDetailResponse{
 		return backdropPath;
 	}
 
-	public int getRevenue(){
+	public long getRevenue(){
 		return revenue;
 	}
 
@@ -102,7 +102,7 @@ public class MovieDetailResponse{
 		return productionCountries;
 	}
 
-	public int getId(){
+	public String getId(){
 		return id;
 	}
 

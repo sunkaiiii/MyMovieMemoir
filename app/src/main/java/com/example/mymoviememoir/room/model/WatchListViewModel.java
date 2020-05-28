@@ -51,7 +51,7 @@ public class WatchListViewModel extends ViewModel {
         watchListRepository.updateWatchLists(watchLists);
     }
 
-    public void findById(int movieId, WatchListRepository.OnFindSuccessListener<WatchList> listener) {
+    public void findById(String movieId, WatchListRepository.OnFindSuccessListener<WatchList> listener) {
         watchListRepository.findByID(movieId, listener);
     }
 }

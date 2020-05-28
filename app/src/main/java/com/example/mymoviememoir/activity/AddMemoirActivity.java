@@ -236,7 +236,7 @@ public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
                     memoir.setWatchedTime(Values.REQUESTING_FORMAT.format(selectedWatchedDate.getTime()));
                     memoir.setMemoirComment(movieComment.getText().toString());
                     memoir.setMovieImage(getIntent().getStringExtra(MOVIE_IMAGE));
-                    memoir.setMovieId(getIntent().getIntExtra(MOVIE_ID, -1));
+                    memoir.setMovieId(getIntent().getStringExtra(MOVIE_ID));
                     memoir.setPublicRating(getIntent().getDoubleExtra(PUBLIC_RATING, 0.0));
                     requestRestfulService(MyMovieMemoirRestfulAPI.ADD_MOVIE_MEMOIR, memoir);
                     break;

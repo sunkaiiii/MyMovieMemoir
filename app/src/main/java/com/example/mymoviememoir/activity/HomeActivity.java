@@ -19,6 +19,7 @@ import com.example.mymoviememoir.fragment.MapsFragment;
 import com.example.mymoviememoir.fragment.MemoirFragment;
 import com.example.mymoviememoir.fragment.MovieSearchFragment;
 import com.example.mymoviememoir.fragment.ReportFragment;
+import com.example.mymoviememoir.fragment.WatchListFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.HashMap;
@@ -82,6 +83,14 @@ public class HomeActivity extends BaseRequestRestfulServiceActivity implements N
                 } else {
                     fragment = new MemoirFragment();
                     fragmentMap.put(R.layout.fragment_memoir, fragment);
+                }
+                break;
+            case R.id.watch_list:
+                if (fragmentMap.containsKey(R.layout.fragment_watch_list)) {
+                    fragment = fragmentMap.get(R.layout.fragment_watch_list);
+                } else {
+                    fragment = new WatchListFragment();
+                    fragmentMap.put(R.layout.fragment_watch_list, fragment);
                 }
                 break;
             case R.id.reports:

@@ -6,10 +6,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class GetMovieDetailRequest extends BaseMovieDBRequest {
-    private int id;
+    private String id;
     private String language;
 
-    public GetMovieDetailRequest(int id) {
+    public GetMovieDetailRequest(String id) {
         this.id = id;
     }
 

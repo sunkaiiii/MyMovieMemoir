@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 public class Memoir extends BasePostModel {
 
     @SerializedName("movieId")
-    private int movieId;
+    private String movieId;
 
     @SerializedName("watchedDate")
     private String watchedDate;
@@ -41,11 +41,11 @@ public class Memoir extends BasePostModel {
     @SerializedName("watchedTime")
     private String watchedTime;
 
-    public int getMovieId() {
+    public String getMovieId() {
         return movieId;
     }
 
-    public void setMovieId(int movieId) {
+    public void setMovieId(String movieId) {
         this.movieId = movieId;
     }
 

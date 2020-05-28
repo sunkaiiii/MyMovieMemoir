@@ -8,8 +8,10 @@
     <color name="secondaryDarkColor">#af4448</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
+    <color name="mid_grey">#777777</color>
     <color name="lightGrey">#cccccc</color>
     <color name="superLightGrey">#EEEEEE</color>
-
+    <color name="light_half_transparent">#44000000</color>
+    <color name="half_transparent">#77000000</color>
 </resources>
 

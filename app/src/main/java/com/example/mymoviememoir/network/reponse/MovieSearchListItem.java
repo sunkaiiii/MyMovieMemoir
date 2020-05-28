@@ -14,7 +14,7 @@ public class MovieSearchListItem {
     private String release_date;
     private double popularity;
     private double vote_average;
-    private int id;
+    private String id;
     private boolean adult;
     private int voteCount;
 
@@ -62,7 +62,7 @@ public class MovieSearchListItem {
         return vote_average;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

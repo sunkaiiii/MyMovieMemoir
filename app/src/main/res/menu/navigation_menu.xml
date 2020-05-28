@@ -13,6 +13,9 @@
         android:icon="@drawable/baseline_history_black_24"
         android:title="@string/movie_memoir" />
     <item
+        android:id="@+id/watch_list"
+        android:title="@string/watch_list"/>
+    <item
         android:id="@+id/reports"
         android:icon="@drawable/baseline_outlined_flag_black_24"
         android:title="@string/reports" />

@@ -58,7 +58,7 @@ public class WatchListRepository {
         });
     }
 
-    public void findByID(final int movieId, OnFindSuccessListener<WatchList> listener) {
+    public void findByID(final String movieId, OnFindSuccessListener<WatchList> listener) {
         final Handler handler = new Handler(Looper.getMainLooper());
         WatchListDatabase.databseWriteExecutor.execute(() -> {
             watchList = dao.findById(movieId);
