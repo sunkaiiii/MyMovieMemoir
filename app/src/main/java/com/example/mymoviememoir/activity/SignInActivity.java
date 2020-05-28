@@ -91,9 +91,8 @@ public class SignInActivity extends BaseRequestRestfulServiceActivity implements
                         Toast.makeText(this, "username or password is error, please try again", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    Credentials credentials = GsonUtils.fromJsonToObject(response,Credentials.class);
-                    getSharedPreferences(Values.USER_INFO, MODE_PRIVATE).edit().putString(Values.CREDENTIALS, GsonUtils.toJson(credentials)).apply();
-                    CredentialInfoUtils.setInstance(credentials);
+                    Credentials credentials = GsonUtils.fromJsonToObject(response, Credentials.class);
+                    CredentialInfoUtils.setInstance(this, credentials);
                     getPersonInformation(credentials.getId());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -102,8 +101,7 @@ public class SignInActivity extends BaseRequestRestfulServiceActivity implements
             case GET_PERSON_INFORMATIOIN:
                 try {
                     Person personInformation = GsonUtils.fromJsonToObject(response, Person.class);
-                    getSharedPreferences(Values.USER_INFO, MODE_PRIVATE).edit().putString(Values.PERSON, personInformation.getBodyParameterJson()).apply();
-                    PersonInfoUtils.setInstance(personInformation);
+                    PersonInfoUtils.setInstance(this, personInformation);
                     navigateToHomeScreen();
                 } catch (Exception e) {
                     e.printStackTrace();

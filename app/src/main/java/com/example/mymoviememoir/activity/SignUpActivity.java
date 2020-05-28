@@ -152,11 +152,16 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
                 break;
             case SIGN_UP_PERSON:
                 try {
+                    int personId = Integer.parseInt(response);
+                    if (personId <= 0) {
+                        Toast.makeText(this, "Sign up failed, please try again", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     Toast.makeText(this, "sign up successful", Toast.LENGTH_SHORT).show();
                     Person personRequest = (Person) helper.getBodyRequestModel();
-                    getSharedPreferences(Values.USER_INFO, MODE_PRIVATE).edit().putString(Values.PERSON, personRequest.getBodyParameterJson()).apply();
-                    PersonInfoUtils.setInstance(personRequest);
-                    CredentialInfoUtils.setInstance(personRequest.getCredentialsId());
+                    personRequest.setId(personId);
+                    PersonInfoUtils.setInstance(this, personRequest);
+                    CredentialInfoUtils.setInstance(this, personRequest.getCredentialsId());
                     setResult(Values.SUCCESS);
                     finish();
                 } catch (RequestHelper.NoSuchTypeOfModelException e) {
@@ -171,7 +176,6 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
 
     private boolean isInformationValid() {
         boolean success = true;
-        //TODO 错误信息显示不全
         if (!isValidEmail(eEmail.getText().toString())) {
             eEmail.setError("the email address is invalid");
             success = false;

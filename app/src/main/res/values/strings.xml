@@ -62,4 +62,6 @@
     <string name="ending_date">Ending date</string>
     <string name="address">Address</string>
     <string name="user_attitude">User Attitude</string>
+    <string name="close">Close</string>
+    <string name="open">Open</string>
 </resources>
