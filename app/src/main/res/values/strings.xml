@@ -64,4 +64,6 @@
     <string name="user_attitude">User Attitude</string>
     <string name="close">Close</string>
     <string name="open">Open</string>
+    <string name="welcome">Welcome to use</string>
+    <string name="my_movie_memoir">My Movie Memoir!</string>
 </resources>

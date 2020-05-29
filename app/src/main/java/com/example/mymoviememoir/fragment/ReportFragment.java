@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.ColorUtils;
 
 import com.example.mymoviememoir.R;
 import com.example.mymoviememoir.fragment.models.MoviePerYearModel;
@@ -37,10 +39,13 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -87,8 +92,8 @@ public class ReportFragment extends BaseRequestRestfulServiceFragment {
         pieSpinner = view.findViewById(R.id.pie_spinner);
         startingDateBtn.setOnClickListener(this::showDatePickerDialog);
         endingDateBtn.setOnClickListener(this::showDatePickerDialog);
-        movieSuburbModel.getMovieSuburb().observe(getViewLifecycleOwner(), this::createBarChart);
-        moviePerYearModel.getMovies().observe(getViewLifecycleOwner(), this::createPieChart);
+        movieSuburbModel.getMovieSuburb().observe(getViewLifecycleOwner(), this::createPieChart);
+        moviePerYearModel.getMovies().observe(getViewLifecycleOwner(), this::createBarChart);
         pieSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -108,20 +113,19 @@ public class ReportFragment extends BaseRequestRestfulServiceFragment {
     }
 
 
-    private void createBarChart(List<MovieSuburbResponse> movieSuburbResponses) {
-        final int count = getSuburbCount(movieSuburbResponses);
+    private void createBarChart(List<MoviePerYearResponse> moviePerYearResponses) {
         List<BarEntry> values = new ArrayList<>();
-        List<String> suburbs = new ArrayList<>();
+        List<String> months = new ArrayList<>();
         int index = 0;
-        for (MovieSuburbResponse m : movieSuburbResponses) {
-            if (m.getCount() <= 0) {
+        for (MoviePerYearResponse m : moviePerYearResponses) {
+            if (m.getNumber() <= 0) {
                 continue;
             }
-            float percentage = m.getCount() * 1f / count;
-            values.add(new BarEntry(index++, percentage));
-            suburbs.add(m.getSuburb());
+            values.add(new BarEntry(index++, m.getNumber()));
+            months.add(m.getMonth());
         }
-        BarUtils.initBarChart(barChart, new SuburbAxisValueFormatter(suburbs), new MyValueFormmater());
+        barChart.getAxisRight().setEnabled(false);
+        BarUtils.initBarChart(barChart, new SuburbAxisValueFormatter(months), new MyValueFormmater());
         BarDataSet set;
         if (barChart.getData() != null && barChart.getData().getDataSetCount() > 0) {
             set = (BarDataSet) barChart.getData().getDataSetByIndex(0);
@@ -129,9 +133,11 @@ public class ReportFragment extends BaseRequestRestfulServiceFragment {
             barChart.getData().notifyDataChanged();
             barChart.notifyDataSetChanged();
         } else {
-            set = new BarDataSet(values, "The number of watched movie per suburb");
+            set = new BarDataSet(values, "The number of watched movie per month in a year");
             ArrayList<IBarDataSet> dataSets = new ArrayList<>();
             dataSets.add(set);
+            set.setGradientColor(ContextCompat.getColor(getContext(), R.color.secondaryLightColor), ContextCompat.getColor(getContext(), R.color.secondaryLightColor));
+            set.setValueFormatter(new MyValueFormmater());
             BarData data = new BarData(dataSets);
             barChart.setData(data);
             barChart.invalidate();
@@ -139,37 +145,12 @@ public class ReportFragment extends BaseRequestRestfulServiceFragment {
 
     }
 
-    private void createPieChart(List<MoviePerYearResponse> moviePerYearResponses) {
-        int count = getWatchedCount(moviePerYearResponses);
-        ArrayList<PieEntry> entries = new ArrayList<>();
-        for (MoviePerYearResponse response : moviePerYearResponses) {
-            if (response.getNumber() <= 0) {
-                continue;
-            }
-            entries.add(new PieEntry(response.getNumber() / 1.0f / count));
-        }
-        PieDataSet dataSet = new PieDataSet(entries, "Watched Movie Per Month");
-        PieData data = new PieData(dataSet);
-        pieChart.animateXY(500,500);
-        pieChart.setData(data);
+    private void createPieChart(List<MovieSuburbResponse> movieSuburbResponses) {
+        pieChart.animateXY(500, 500);
+        pieChart.setData(BarUtils.initPieChart(getContext(), movieSuburbResponses));
         pieChart.invalidate();
     }
 
-    private int getSuburbCount(final List<MovieSuburbResponse> movieSuburbResponses) {
-        int count = 0;
-        for (MovieSuburbResponse m : movieSuburbResponses) {
-            count += m.getCount();
-        }
-        return count;
-    }
-
-    private int getWatchedCount(final List<MoviePerYearResponse> moviePerYearResponses) {
-        int count = 0;
-        for (MoviePerYearResponse response : moviePerYearResponses) {
-            count += response.getNumber();
-        }
-        return count;
-    }
 
     private void showDatePickerDialog(final View v) {
         Calendar calendar = Calendar.getInstance();

@@ -5,15 +5,15 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import java.util.List;
 
 public class SuburbAxisValueFormatter extends ValueFormatter {
-    List<String> suburbs;
+    List<String> month;
 
     public SuburbAxisValueFormatter(List<String> suburbs) {
-        this.suburbs = suburbs;
+        this.month = suburbs;
     }
 
     @Override
     public String getFormattedValue(float value) {
         int index = (int) value;
-        return suburbs.get(index);
+        return month.get(index);
     }
 }
