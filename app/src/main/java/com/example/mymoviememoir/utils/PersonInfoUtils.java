@@ -10,7 +10,7 @@ import static android.content.Context.MODE_PRIVATE;
  * @author sunkai
  */
 public final class PersonInfoUtils {
-    public static Person Instance;
+    private static Person Instance;
 
     public static synchronized Person getPersonInstance() {
         if (Instance == null) {

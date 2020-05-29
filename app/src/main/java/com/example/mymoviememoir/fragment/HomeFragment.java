@@ -19,6 +19,7 @@ import com.example.mymoviememoir.network.RestfulGetModel;
 import com.example.mymoviememoir.network.reponse.MovieRatingResponse;
 import com.example.mymoviememoir.utils.CredentialInfoUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
+import com.example.mymoviememoir.utils.PersonInfoUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +50,7 @@ public class HomeFragment extends BaseRequestRestfulServiceFragment {
 
     private void getMovieInformation() {
         requestRestfulService(MyMovieMemoirRestfulAPI.GET_USER_RECENT_YEAR_HIGHEST_MOVIE_INFORMATION,
-                (RestfulGetModel) () -> Collections.singletonList(String.valueOf(CredentialInfoUtils.getId())));
+                (RestfulGetModel) () -> Collections.singletonList(String.valueOf(PersonInfoUtils.getPersonInstance().getId())));
     }
 
     @Override
@@ -69,6 +70,7 @@ public class HomeFragment extends BaseRequestRestfulServiceFragment {
     }
 
     private void setDataInListAdapter(List<MovieRatingResponse> movies) {
+        //TODO UI improvement
         final MovieRatingInformationAdapter adapter = new MovieRatingInformationAdapter(movies);
         topMovieList.setAdapter(adapter);
 

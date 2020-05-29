@@ -3,24 +3,24 @@ package com.example.mymoviememoir.network.reponse;
 import androidx.annotation.NonNull;
 
 public class SimpleStringResponse {
-    private String result;
+    private String resultString;
 
-    public SimpleStringResponse(String result) {
-        this.result = result;
+    public SimpleStringResponse(String resultString) {
+        this.resultString = resultString;
     }
 
-    public String getResult() {
-        return result;
+    public String getResultString() {
+        return resultString;
     }
 
-    public void setResult(String result) {
-        this.result = result;
+    public void setResultString(String resultString) {
+        this.resultString = resultString;
 
     }
 
     @NonNull
     @Override
     public String toString() {
-        return result;
+        return resultString;
     }
 }
