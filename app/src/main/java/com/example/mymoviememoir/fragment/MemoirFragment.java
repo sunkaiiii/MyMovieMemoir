@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -46,7 +47,7 @@ public class MemoirFragment extends BaseRequestRestfulServiceFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        memoirListModel = new MemoirListModel();
+        memoirListModel = new ViewModelProvider(this).get(MemoirListModel.class);
         return inflater.inflate(R.layout.fragment_memoir, container, false);
     }
 

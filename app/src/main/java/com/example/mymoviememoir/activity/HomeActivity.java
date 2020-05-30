@@ -14,7 +14,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.mymoviememoir.R;
 import com.example.mymoviememoir.fragment.HomeFragment;
-import com.example.mymoviememoir.fragment.MainTopViewFragment;
 import com.example.mymoviememoir.fragment.MapsFragment;
 import com.example.mymoviememoir.fragment.MemoirFragment;
 import com.example.mymoviememoir.fragment.MovieSearchFragment;
@@ -44,14 +43,11 @@ public class HomeActivity extends BaseRequestRestfulServiceActivity implements N
 
     private void initViews() {
         HomeFragment homeFragment = new HomeFragment();
-        MainTopViewFragment mainTopViewFragment = new MainTopViewFragment();
         fragmentMap = new HashMap<>();
         fragmentMap.put(R.layout.main_fragment, homeFragment);
-        fragmentMap.put(R.layout.fragment_main_top_layout, mainTopViewFragment);
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.content_frame, homeFragment);
-        fragmentTransaction.replace(R.id.top_frame_view, mainTopViewFragment);
         fragmentTransaction.commit();
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -71,14 +67,8 @@ public class HomeActivity extends BaseRequestRestfulServiceActivity implements N
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         drawerLayout.closeDrawer(GravityCompat.START);
         final Fragment fragment;
-        MainTopViewFragment topViewFragment = (MainTopViewFragment) fragmentMap.get(R.layout.fragment_main_top_layout);
-        if (topViewFragment == null) {
-            topViewFragment = new MainTopViewFragment();
-            fragmentMap.put(R.layout.fragment_main_top_layout, topViewFragment);
-        }
         switch (item.getItemId()) {
             case R.id.home:
-                fragmentTransaction.replace(R.id.top_frame_view, topViewFragment);
                 fragment = fragmentMap.get(R.layout.main_fragment);
                 break;
             case R.id.search:
@@ -88,7 +78,6 @@ public class HomeActivity extends BaseRequestRestfulServiceActivity implements N
                     fragment = new MovieSearchFragment();
                     fragmentMap.put(R.layout.fragment_movie_search, fragment);
                 }
-
                 break;
             case R.id.memoir:
                 if (fragmentMap.containsKey(R.layout.fragment_memoir)) {
@@ -125,9 +114,6 @@ public class HomeActivity extends BaseRequestRestfulServiceActivity implements N
             default:
                 fragment = null;
                 break;
-        }
-        if (item.getItemId() != R.id.home) {
-            fragmentTransaction.remove(topViewFragment);
         }
         if (fragment != null) {
             fragmentTransaction.replace(R.id.content_frame, fragment);

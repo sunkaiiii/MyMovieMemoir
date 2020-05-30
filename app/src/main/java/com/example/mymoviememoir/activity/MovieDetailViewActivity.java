@@ -1,5 +1,6 @@
 package com.example.mymoviememoir.activity;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -7,6 +8,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.transition.Explode;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -330,7 +333,11 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
                 intent.putExtra(AddMemoirActivity.MOVIE_RELEASE_DATE, movieDetailResponse.getReleaseDate());
                 intent.putExtra(AddMemoirActivity.MOVIE_ID, id);
                 intent.putExtra(AddMemoirActivity.PUBLIC_RATING, movieDetailResponse.getVoteAverage());
-                startActivity(intent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this, movieImage, "movie_image").toBundle());
+                } else {
+                    startActivity(intent);
+                }
                 break;
             case R.id.add_watch_list:
                 break;

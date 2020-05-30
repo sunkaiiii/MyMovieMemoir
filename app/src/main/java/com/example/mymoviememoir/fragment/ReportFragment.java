@@ -14,7 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.ColorUtils;
 
 import com.example.mymoviememoir.R;
 import com.example.mymoviememoir.fragment.models.MoviePerYearModel;
@@ -36,16 +35,10 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -82,6 +75,7 @@ public class ReportFragment extends BaseRequestRestfulServiceFragment {
         initView(view);
     }
 
+
     private void initView(View view) {
         startingDateBtn = view.findViewById(R.id.starting_date_btn);
         endingDateBtn = view.findViewById(R.id.ending_date_btn);
@@ -90,6 +84,15 @@ public class ReportFragment extends BaseRequestRestfulServiceFragment {
         pieChart = view.findViewById(R.id.pie_chart);
         barChart = view.findViewById(R.id.bar_chart);
         pieSpinner = view.findViewById(R.id.pie_spinner);
+        if (startingDay != null) {
+            startingDateTv.setText(Values.SIMPLE_DATE_FORMAT.format(startingDay.getTime()));
+        }
+        if (endingDay != null) {
+            startingDateTv.setText(Values.SIMPLE_DATE_FORMAT.format(endingDay.getTime()));
+        }
+        if (startingDay != null && endingDay != null) {
+            tryToRequestNUmberOfWatching();
+        }
         startingDateBtn.setOnClickListener(this::showDatePickerDialog);
         endingDateBtn.setOnClickListener(this::showDatePickerDialog);
         movieSuburbModel.getMovieSuburb().observe(getViewLifecycleOwner(), this::createPieChart);
@@ -173,11 +176,11 @@ public class ReportFragment extends BaseRequestRestfulServiceFragment {
                 default:
                     break;
             }
-            tryToRequestHttp();
+            tryToRequestNUmberOfWatching();
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    private void tryToRequestHttp() {
+    private void tryToRequestNUmberOfWatching() {
         if (startingDay == null || endingDay == null) {
             return;
         }

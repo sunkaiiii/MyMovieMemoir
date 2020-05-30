@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.mymoviememoir.R;
 import com.example.mymoviememoir.entities.Credentials;
@@ -56,6 +57,8 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
     private TextInputEditText eCheckedPassword;
     private RadioGroup genderGroup;
     private Spinner spState;
+    private Toolbar toolbar;
+    private View signUpBtn;
 
 
     @Override
@@ -77,19 +80,22 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
         eAddress = findViewById(R.id.e_address);
         genderGroup = findViewById(R.id.gender_group);
         spState = findViewById(R.id.sp_state);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         btnSelectBirthday.setOnClickListener(v -> new DatePickerDialog(SignUpActivity.this, (view, year, month, dayOfMonth) -> {
             Calendar calendar = Calendar.getInstance();
             calendar.set(year, month, dayOfMonth);
             m_birthday = calendar;
-            TextView birthday = findViewById(R.id.tv_show_birthday);
-            birthday.setText(Values.SIMPLE_DATE_FORMAT.format(calendar.getTime()));
-            birthday.setVisibility(View.VISIBLE);
+            tvShowBirthday.setText(String.format("The birthday is: %s", Values.SIMPLE_DATE_FORMAT.format(calendar.getTime())));
+            tvShowBirthday.setVisibility(View.VISIBLE);
             if (!isValidBirthDay(m_birthday)) {
                 findViewById(R.id.tv_error_birthday_text).setVisibility(View.VISIBLE);
             }
         }, 1990, 0, 1).show());
 
-        findViewById(R.id.btn_sign_up).setOnClickListener(v -> {
+        signUpBtn = findViewById(R.id.btn_sign_up);
+        signUpBtn.setOnClickListener(v -> {
             if (isInformationValid()) {
                 requestCheckUserEmailExisting();
             }
@@ -116,7 +122,7 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
 
 
     private void tryToSignPerson(int id, SignUpCredentialRequest request) {
-        Person personRequest = new com.example.mymoviememoir.entities.Person();
+        Person personRequest = new Person();
         personRequest.setCredentialsId(new Credentials(id, request.getUsername(), request.getPassword()));
         personRequest.setDob(Values.REQUESTING_FORMAT.format(m_birthday.getTime()));
         personRequest.setFname(eFirstName.getText().toString());
@@ -129,8 +135,21 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
     }
 
     @Override
+    public void preExecute(RequestHelper helper) {
+        super.preExecute(helper);
+        signUpBtn.setEnabled(false);
+    }
+
+    @Override
+    public void onExecuteFailed(RequestHelper helper, String message, Exception ex) {
+        super.onExecuteFailed(helper, message, ex);
+        signUpBtn.setEnabled(true);
+    }
+
+    @Override
     public void onPostExecute(RequestHelper helper, String response) {
         super.onPostExecute(helper, response);
+        signUpBtn.setEnabled(true);
         switch (helper.getRestfulAPI()) {
             case CHECK_USER_NAME:
                 List<SignUpCredentialRequest> emailList = GsonUtils.fromJsonToList(response, SignUpCredentialRequest.class);

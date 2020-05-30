@@ -1,9 +1,16 @@
 package com.example.mymoviememoir.activity;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -30,6 +37,9 @@ public class SignInActivity extends BaseRequestRestfulServiceActivity implements
     private static final int SIGN_UP = 1;
     private TextInputEditText eUsername;
     private TextInputEditText ePassword;
+    private ImageButton signInBtn;
+    private TextView signUpBtn;
+    private CheckBox showPasswordCheckbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,11 +92,29 @@ public class SignInActivity extends BaseRequestRestfulServiceActivity implements
     }
 
     @Override
+    public void preExecute(RequestHelper helper) {
+        super.preExecute(helper);
+        setEnableButtons(false);
+    }
+
+    @Override
+    public void onExecuteFailed(RequestHelper helper, String message, Exception ex) {
+        super.onExecuteFailed(helper, message, ex);
+        setEnableButtons(true);
+    }
+
+    private void setEnableButtons(boolean enable) {
+        signInBtn.setEnabled(enable);
+        signUpBtn.setEnabled(enable);
+
+    }
+
+    @Override
     public void onPostExecute(RequestHelper helper, String response) {
         super.onPostExecute(helper, response);
-        switch (helper.getRestfulAPI()) {
-            case SIGN_IN:
-                try {
+        try {
+            switch (helper.getRestfulAPI()) {
+                case SIGN_IN:
                     if (TextUtils.isEmpty(response)) {
                         Toast.makeText(this, "username or password is error, please try again", Toast.LENGTH_SHORT).show();
                         return;
@@ -94,21 +122,21 @@ public class SignInActivity extends BaseRequestRestfulServiceActivity implements
                     Credentials credentials = GsonUtils.fromJsonToObject(response, Credentials.class);
                     CredentialInfoUtils.setInstance(this, credentials);
                     getPersonInformation(credentials.getId());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case GET_PERSON_INFORMATIOIN:
-                try {
+
+                    break;
+                case GET_PERSON_INFORMATIOIN:
+
                     Person personInformation = GsonUtils.fromJsonToObject(response, Person.class);
                     PersonInfoUtils.setInstance(this, personInformation);
                     navigateToHomeScreen();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            default:
-                break;
+
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            setEnableButtons(true);
         }
     }
 
@@ -132,10 +160,26 @@ public class SignInActivity extends BaseRequestRestfulServiceActivity implements
         finish();
     }
 
+    private void changeShowTypeOfPasswordView(CompoundButton buttonView, boolean isChecked) {
+        int type = InputType.TYPE_CLASS_TEXT;
+        if (isChecked) {
+            type |= InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
+        } else {
+            type |= InputType.TYPE_TEXT_VARIATION_PASSWORD;
+        }
+        ePassword.setInputType(type);
+    }
+
     private void initView() {
         eUsername = findViewById(R.id.e_username);
         ePassword = findViewById(R.id.e_password);
-        findViewById(R.id.sign_up_btn).setOnClickListener(this);
-        findViewById(R.id.sign_in_btn).setOnClickListener(this);
+        signInBtn = findViewById(R.id.sign_in_btn);
+        signUpBtn = findViewById(R.id.sign_up_btn);
+        showPasswordCheckbox = findViewById(R.id.show_password);
+        signInBtn.setOnClickListener(this);
+
+        signUpBtn.setOnClickListener(this);
+        signUpBtn.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+        showPasswordCheckbox.setOnCheckedChangeListener(this::changeShowTypeOfPasswordView);
     }
 }

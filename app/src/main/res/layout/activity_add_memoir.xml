@@ -28,6 +28,7 @@
                     android:layout_height="310dp"
                     android:layout_marginTop="16dp"
                     android:scaleType="centerCrop"
+                    android:transitionName="movie_image"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -88,7 +89,7 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/add_memoir_bottom_view_background"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-        <!-- TODO: UI improvement to make the buttons to be more material design style -->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -180,6 +181,8 @@
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/secondaryColor"
+                android:textStyle="italic"
                 android:text="Doesn't have the cinema? Add it!"
                 app:layout_constraintStart_toStartOf="@+id/spinner2"
                 app:layout_constraintTop_toBottomOf="@+id/spinner2" />
@@ -193,7 +196,8 @@
                 app:layout_constraintBottom_toBottomOf="@+id/textView8"
                 app:layout_constraintStart_toEndOf="@+id/textView8"
                 app:layout_constraintTop_toTopOf="@+id/textView8"
-                app:srcCompat="@android:drawable/ic_input_add" />
+                app:srcCompat="@drawable/baseline_add_circle_outline_white_24"
+                android:tint="@color/secondaryColor"/>
 
             <Button
                 android:id="@+id/ok"

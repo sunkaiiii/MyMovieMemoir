@@ -6,7 +6,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.transition.TransitionInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -78,6 +81,11 @@ public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setBackgroundDrawableResource(R.color.light_half_transparent);
+            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+            getWindow().setEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.add_memoir_transition));
+        }
         setContentView(R.layout.activity_add_memoir);
         initView();
         setSupportActionBar(toolbar);

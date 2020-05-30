@@ -19,8 +19,8 @@
     <string name="movie_memoir">Movie Memoir</string>
     <string name="reports">Reports</string>
     <string name="maps">Maps</string>
-    <string name="select">select</string>
-    <string name="birth_day_error">the birth day is invalid</string>
+    <string name="select">Select Birthday</string>
+    <string name="birth_day_error">The birth day is invalid</string>
     <string-array name="states">
         <item>WA</item>
         <item>QLD</item>
@@ -66,4 +66,7 @@
     <string name="open">Open</string>
     <string name="welcome">Welcome to use</string>
     <string name="my_movie_memoir">My Movie Memoir!</string>
+    <string name="welcome2">Welcome,</string>
+    <string name="no_memoir_notification">You currently don\'t have a memoir.</string>
+    <string name="show_password">Show Password</string>
 </resources>

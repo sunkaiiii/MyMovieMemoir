@@ -56,7 +56,6 @@ public class SearchMovieListAdapter extends RecyclerView.Adapter<SearchMovieList
         }));
     }
 
-    //TODO UI improvement to shirnk the length of the layout
     @Override
     public int getItemCount() {
         return movies.size();

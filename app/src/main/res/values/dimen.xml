@@ -2,4 +2,5 @@
 <resources>
     <dimen name="pageMargin">15dp</dimen>
     <dimen name="offset">30dp</dimen>
+    <dimen name="offsety">150dp</dimen>
 </resources>
