@@ -7,6 +7,16 @@ public class MovieRatingResponse {
     private Date releaseDate;
     private double ratingScore;
 
+    public String getMovieImage() {
+        return movieImage;
+    }
+
+    public void setMovieImage(String movieImage) {
+        this.movieImage = movieImage;
+    }
+
+    private String movieImage;
+
     public void setMovieName(String movieName) {
         this.movieName = movieName;
     }

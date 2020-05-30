@@ -21,7 +21,7 @@ import com.example.mymoviememoir.R;
  * @author sunkai
  */
 public class RatingSelectView extends LinearLayout {
-    private float rating = -1f;
+    private double rating = -1f;
 
     public RatingSelectView(Context context) {
         super(context);
@@ -49,13 +49,13 @@ public class RatingSelectView extends LinearLayout {
         });
     }
 
-    public void setRating(float rating) {
+    public void setRating(double rating) {
         this.rating = rating;
         generateImageViews(getContext());
     }
 
     private void generateImageViews(Context context) {
-        float r = rating;
+        double r = rating;
         ImageView[] imageViews = getImageViews();
         for (int i = 0; i < getChildCount(); i++) {
             ImageView imageView = imageViews[i];
@@ -138,7 +138,7 @@ public class RatingSelectView extends LinearLayout {
         return super.performClick();
     }
 
-    public float getRatingScore() {
+    public double getRatingScore() {
         return rating;
     }
 

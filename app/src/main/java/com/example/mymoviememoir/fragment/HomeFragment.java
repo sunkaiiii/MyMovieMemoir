@@ -9,15 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.mymoviememoir.R;
-import com.example.mymoviememoir.adapter.MovieRatingInformationAdapter;
+import com.example.mymoviememoir.adapter.MovieTopRatingInformationAdapter;
 import com.example.mymoviememoir.fragment.models.HomeFragmentListModel;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
 import com.example.mymoviememoir.network.RequestHelper;
 import com.example.mymoviememoir.network.RestfulGetModel;
 import com.example.mymoviememoir.network.reponse.MovieRatingResponse;
-import com.example.mymoviememoir.utils.CredentialInfoUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
 import com.example.mymoviememoir.utils.PersonInfoUtils;
 
@@ -30,7 +30,7 @@ import java.util.List;
 public class HomeFragment extends BaseRequestRestfulServiceFragment {
 
     private HomeFragmentListModel mMovieListModel;
-    private RecyclerView topMovieList;
+    private ViewPager2 topMovieList;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -70,10 +70,21 @@ public class HomeFragment extends BaseRequestRestfulServiceFragment {
     }
 
     private void setDataInListAdapter(List<MovieRatingResponse> movies) {
-        //TODO UI improvement
-        final MovieRatingInformationAdapter adapter = new MovieRatingInformationAdapter(movies);
+        final MovieTopRatingInformationAdapter adapter = new MovieTopRatingInformationAdapter(movies);
         topMovieList.setAdapter(adapter);
-
+        final int pageMarginPx = getContext().getResources().getDimensionPixelOffset(R.dimen.offset);
+        final int offsetPx = getContext().getResources().getDimensionPixelOffset(R.dimen.pageMargin);
+        /*
+         * Page Transform Animation
+         * References on
+         * https://proandroiddev.com/look-deep-into-viewpager2-13eb8e06e419
+         */
+        topMovieList.setPageTransformer((page, position) -> {
+            final int offset = (int) (position*-(2*offsetPx+pageMarginPx));
+            page.setTranslationX(offset);
+            page.setTranslationY(Math.abs(position)*250f);
+        });
+        topMovieList.setOffscreenPageLimit(2);
     }
 
     private void initView(View view) {
