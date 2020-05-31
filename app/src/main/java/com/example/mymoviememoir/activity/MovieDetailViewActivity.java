@@ -8,8 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.transition.Explode;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +45,6 @@ import com.example.mymoviememoir.network.request.twitter.QueryTwitterRequest;
 import com.example.mymoviememoir.network.request.twitter.TwitterSessionRequest;
 import com.example.mymoviememoir.room.entity.WatchList;
 import com.example.mymoviememoir.room.model.WatchListViewModel;
-import com.example.mymoviememoir.room.repository.WatchListRepository;
 import com.example.mymoviememoir.utils.BagOfWordsUtils;
 import com.example.mymoviememoir.utils.ColorUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
@@ -57,6 +54,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.JsonObject;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -129,7 +127,6 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
         recyclerView.setLayoutManager(manager);
         crewRecyclerView.setLayoutManager(gridLayoutManager);
         addMemoir.setOnClickListener(this);
-        addWatchList.setOnClickListener(this);
         productContryAndStatus = findViewById(R.id.product_contry_and_status);
         userAttitudeViewPager = findViewById(R.id.user_attitude_view_pager);
         tabLayout = findViewById(R.id.tab_layout);
@@ -187,16 +184,24 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
 
     private void getWatchListInformationFromDatabase(MovieDetailResponse movieDetailResponse) {
         String movieId = movieDetailResponse.getId();
+        /*
+        Find whether the movie is in the watch list to enable or disable the functionality of the button.
+         */
         watchListViewModel.findById(movieId, watchList -> {
             if (watchList != null) {
                 addWatchListText.setText("Already In Watch List");
                 addWatchList.setEnabled(false);
             } else {
                 addWatchList.setOnClickListener((v) -> {
-                    watchListViewModel.insert(new WatchList(movieDetailResponse.getId()
-                            , movieDetailResponse.getTitle()
-                            , movieDetailResponse.getReleaseDate(), Values.SIMPLE_DATE_FORMAT.format(Calendar.getInstance().getTime())
-                            , RequestHost.MOVIE_DB_IMAGE_HOST.getHostUrl() + movieDetailResponse.getPosterPath()));
+                    try {
+                        watchListViewModel.insert(new WatchList(movieDetailResponse.getId()
+                                , movieDetailResponse.getTitle()
+                                , Values.SIMPLE_DATE_FORMAT.format(Values.SIMPLE_DATE_FORMAT_US.parse(movieDetailResponse.getReleaseDate()))
+                                , Values.SIMPLE_DATE_FORMAT.format(Calendar.getInstance().getTime())
+                                , RequestHost.MOVIE_DB_IMAGE_HOST.getHostUrl() + movieDetailResponse.getPosterPath()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     addWatchListText.setText("Already In Watch List");
                     addWatchListText.setOnClickListener(null);
                     addWatchListText.setEnabled(false);
@@ -208,6 +213,9 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
 
 
     private void requestTwitterQuery() {
+        /*
+        add "" around the String of movie name to specify exactly searching for the movie
+         */
         QueryTwitterRequest queryTwitterRequest = new QueryTwitterRequest(String.format("\"%s\" movie", movieDetailResponse.getTitle()), Values.TWITTER_SESSION);
         requestRestfulService(MyMovieMemoirRestfulAPI.SEARCH_TWITTER, queryTwitterRequest);
     }
@@ -216,10 +224,10 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
         requestRestfulService(MyMovieMemoirRestfulAPI.GET_MOVIE_CREDITS, new GetMovieDetailRequest(id) {
             @Override
             public List<String> getPathParameter() {
-                List<String> paramter = new ArrayList<>();
-                paramter.add(String.valueOf(id));
-                paramter.add("credits");
-                return paramter;
+                List<String> parameter = new ArrayList<>();
+                parameter.add(String.valueOf(id));
+                parameter.add("credits");
+                return parameter;
             }
         });
     }
@@ -235,6 +243,7 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
             }
         }
         movieGenre.setText(sb.toString());
+        //Calculate the overall duration of the movie formatted by hour and minute
         int hour = movieDetailResponse.getRuntime() / 60;
         int minute = movieDetailResponse.getRuntime() % 60;
         movieDuration.setText(String.format(Locale.getDefault(), "%dh %dm", hour, minute));
@@ -256,6 +265,10 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
 
             @Override
             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                /*
+                Set background colour depended on the theme colour of the Poster
+                The background colour will be set for a gradient style.
+                 */
                 if (resource instanceof BitmapDrawable) {
                     final Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
                     int color = ColorUtils.getDarkColor(bitmap);
@@ -289,6 +302,9 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
     }
 
     private void processText(SearchTwtitterResponse searchTwtitterResponse) {
+        /*
+        Asynchronously request the word lists
+         */
         BagOfWordsUtils.requestGetPositiveAndNegativeData(this, (positiveWords, negativeWords) -> {
             Map<BagOfWordsUtils.Classification, ArrayList<StatusesItem>> divisionResult = BagOfWordsUtils.makeStringDivision(searchTwtitterResponse.getStatuses(), movieDetailResponse.getTitle(), positiveWords, negativeWords);
             setDividedDataIntoViewPager(divisionResult);
@@ -299,51 +315,50 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
         movieCommentLayout.setVisibility(View.VISIBLE);
         userAttitudeViewPager.setAdapter(new UserAttitudeViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), divisionResult));
         new TabLayoutMediator(tabLayout, userAttitudeViewPager, (tab, position) -> tab.setText(BagOfWordsUtils.Classification.values()[position].toString())).attach();
-        BagOfWordsUtils.Classification maxAttituteClass = null;
+        BagOfWordsUtils.Classification maxAttitudeClass = null;
         for (Map.Entry<BagOfWordsUtils.Classification, ArrayList<StatusesItem>> entry : divisionResult.entrySet()) {
-            if (maxAttituteClass == null) {
-                maxAttituteClass = entry.getKey();
-            } else if (divisionResult.get(maxAttituteClass).size() < entry.getValue().size()) {
-                maxAttituteClass = entry.getKey();
+            if (maxAttitudeClass == null) {
+                maxAttitudeClass = entry.getKey();
+            } else if (divisionResult.get(maxAttitudeClass).size() < entry.getValue().size()) {
+                maxAttitudeClass = entry.getKey();
             }
         }
-        userAttitude.setText(String.format("%s: %s", userAttitude.getText().toString(), maxAttituteClass.toString()));
+        userAttitude.setText(String.format("%s: %s", userAttitude.getText().toString(), maxAttitudeClass.toString()));
         int i = 0;
         for (; i < BagOfWordsUtils.Classification.values().length; i++) {
-            if (BagOfWordsUtils.Classification.values()[i] == maxAttituteClass) {
+            if (BagOfWordsUtils.Classification.values()[i] == maxAttitudeClass) {
                 break;
             }
         }
         final int index = i;
-        userAttitudeViewPager.post(() -> {
-            userAttitudeViewPager.setCurrentItem(index);
-        });
+        userAttitudeViewPager.post(() -> userAttitudeViewPager.setCurrentItem(index));
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.add_memoir:
-                if (movieDetailResponse == null) {
-                    return;
-                }
-                final Intent intent = new Intent(this, AddMemoirActivity.class);
-                intent.putExtra(AddMemoirActivity.MOVIE_NAME, movieDetailResponse.getTitle());
-                intent.putExtra(AddMemoirActivity.MOVIE_IMAGE, RequestHost.MOVIE_DB_IMAGE_HOST.getHostUrl() + movieDetailResponse.getPosterPath());
-                intent.putExtra(AddMemoirActivity.MOVIE_RELEASE_DATE, movieDetailResponse.getReleaseDate());
-                intent.putExtra(AddMemoirActivity.MOVIE_ID, id);
-                intent.putExtra(AddMemoirActivity.PUBLIC_RATING, movieDetailResponse.getVoteAverage());
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this, movieImage, "movie_image").toBundle());
-                } else {
-                    startActivity(intent);
-                }
-                break;
-            case R.id.add_watch_list:
-                break;
-            default:
-                break;
+        if (v.getId() == R.id.add_memoir) {
+            if (movieDetailResponse == null) {
+                return;
+            }
+            final Intent intent = new Intent(this, AddMemoirActivity.class);
+            intent.putExtra(AddMemoirActivity.MOVIE_NAME, movieDetailResponse.getTitle());
+            intent.putExtra(AddMemoirActivity.MOVIE_IMAGE, RequestHost.MOVIE_DB_IMAGE_HOST.getHostUrl() + movieDetailResponse.getPosterPath());
+            intent.putExtra(AddMemoirActivity.MOVIE_RELEASE_DATE, movieDetailResponse.getReleaseDate());
+            intent.putExtra(AddMemoirActivity.MOVIE_ID, id);
+            intent.putExtra(AddMemoirActivity.PUBLIC_RATING, movieDetailResponse.getVoteAverage());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivityForResult(intent, AddMemoirActivity.ADD_MEMOIR, ActivityOptions.makeSceneTransitionAnimation(this, movieImage, "movie_image").toBundle());
+            } else {
+                startActivityForResult(intent, AddMemoirActivity.ADD_MEMOIR);
+            }
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AddMemoirActivity.ADD_MEMOIR) {
+            setResult(resultCode);
+        }
+    }
 }

@@ -5,6 +5,9 @@ import android.graphics.Color;
 
 import androidx.palette.graphics.Palette;
 
+/**
+ * @author sunkai
+ */
 public class ColorUtils {
 
     public static int getDarkColor(Bitmap bitmap) {

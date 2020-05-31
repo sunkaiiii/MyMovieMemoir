@@ -4,6 +4,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.mymoviememoir.network.interfaces.RestfulParameterModel;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +17,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class OkHttpNetworkConnection {
 
@@ -44,12 +45,15 @@ public class OkHttpNetworkConnection {
         final MyMovieMemoirRestfulAPI restfulAPI = helper.getRestfulAPI();
         final List<String> pathParameter = requestModel.getPathParameter();
         final HttpUrl.Builder restfulRequestUrl = new HttpUrl.Builder().scheme(requestHost.getScheme()).host(requestHost.getHostUrl()).port(requestHost.getPort());
+        //Add Path of Request Address
         for (String url : restfulAPI.getUrl().split(PATH_SPLITER)) {
             restfulRequestUrl.addPathSegment(url);
         }
+        //Add path parameters
         for (String path : pathParameter) {
             restfulRequestUrl.addPathSegment(path);
         }
+        //Add query
         for (Map.Entry<String, String> queryParameter : requestModel.getQueryGetParameter().entrySet()) {
             restfulRequestUrl.addQueryParameter(queryParameter.getKey(), queryParameter.getValue());
         }
@@ -77,6 +81,7 @@ public class OkHttpNetworkConnection {
                 break;
         }
 
+        //Twitter api requires information in the header
         for (Map.Entry<String, String> header : requestModel.getHeader().entrySet()) {
             requestBuilder.addHeader(header.getKey(), header.getValue());
         }

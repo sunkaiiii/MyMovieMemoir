@@ -51,6 +51,7 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.Watc
         public View buttonDelete;
         public TextView addedDate;
         public View contentLayout;
+        public View jumpView;
 
         public WatchListViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,6 +66,7 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.Watc
             buttonDelete = view.findViewById(R.id.button_delete);
             addedDate = view.findViewById(R.id.added_date);
             contentLayout = view.findViewById(R.id.content_layout);
+            jumpView = view.findViewById(R.id.jump_view);
         }
     }
 
@@ -95,7 +97,7 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.Watc
                 return false;
             }
         }).into(holder.imageView);
-        holder.itemView.setOnClickListener((v) -> {
+        holder.jumpView.setOnClickListener((v) -> {
             final Intent intent = new Intent(v.getContext(), MovieDetailViewActivity.class);
             intent.putExtra(MovieDetailViewActivity.ID, watchList.getMovieId());
             intent.putExtra(MovieDetailViewActivity.RELEASE_DATE, watchList.getReleaseDate());

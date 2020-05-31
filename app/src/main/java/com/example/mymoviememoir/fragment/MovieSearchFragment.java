@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -54,13 +53,7 @@ public class MovieSearchFragment extends BaseRequestRestfulServiceFragment {
         searchText = view.findViewById(R.id.search_edit_text);
         searchMovieList = view.findViewById(R.id.search_movie_result_list);
         searchContainerCard = view.findViewById(R.id.search_container_view);
-        searchBtn.setOnClickListener((v) -> {
-            String movieName = searchText.getText().toString();
-            SearchMovieRequest searchMovieRequest = new SearchMovieRequest();
-            searchMovieRequest.setQuery(movieName);
-            requestRestfulService(MyMovieMemoirRestfulAPI.SEARCH_MOVIE_BY_NAME, searchMovieRequest);
-            Utils.hideSoftKeyboard(getContext(),getView().getRootView().getWindowToken());
-        });
+        searchBtn.setOnClickListener(this::requestSearch);
         searchMovieList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -83,6 +76,14 @@ public class MovieSearchFragment extends BaseRequestRestfulServiceFragment {
             }
         });
         movieSearchListModel.getMovies().observe(getViewLifecycleOwner(), this::setDataIntoListView);
+    }
+
+    private void requestSearch(View view) {
+        String movieName = searchText.getText().toString();
+        SearchMovieRequest searchMovieRequest = new SearchMovieRequest();
+        searchMovieRequest.setQuery(movieName);
+        requestRestfulService(MyMovieMemoirRestfulAPI.SEARCH_MOVIE_BY_NAME, searchMovieRequest);
+        Utils.hideSoftKeyboard(getContext(),getView().getRootView().getWindowToken());
     }
 
     private void setDataIntoListView(List<MovieSearchListItem> movies) {

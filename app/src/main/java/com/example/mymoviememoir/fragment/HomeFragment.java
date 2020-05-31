@@ -4,13 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.mymoviememoir.R;
@@ -20,7 +18,7 @@ import com.example.mymoviememoir.fragment.models.HomeFragmentListModel;
 import com.example.mymoviememoir.fragment.models.MainTopViewPersonModel;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
 import com.example.mymoviememoir.network.RequestHelper;
-import com.example.mymoviememoir.network.RestfulGetModel;
+import com.example.mymoviememoir.network.interfaces.RestfulGetModel;
 import com.example.mymoviememoir.network.reponse.MovieRatingResponse;
 import com.example.mymoviememoir.utils.GsonUtils;
 import com.example.mymoviememoir.utils.PersonInfoUtils;
@@ -55,8 +53,8 @@ public class HomeFragment extends BaseRequestRestfulServiceFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mMovieListModel = new ViewModelProvider(this).get(HomeFragmentListModel.class);
-        mMovieListModel.getMovies().observe(getViewLifecycleOwner(), this::setDataInListAdapter);
         mViewModel = new ViewModelProvider(this).get(MainTopViewPersonModel.class);
+        mMovieListModel.getMovies().observe(getViewLifecycleOwner(), this::setDataInListAdapter);
         mViewModel.getPerson().observe(getViewLifecycleOwner(), this::fillPersonInformation);
         readPersonInformation();
         getMovieInformation();

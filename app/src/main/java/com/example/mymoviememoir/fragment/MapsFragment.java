@@ -15,12 +15,11 @@ import androidx.core.content.ContextCompat;
 
 import com.example.mymoviememoir.R;
 import com.example.mymoviememoir.entities.Cinema;
-import com.example.mymoviememoir.entities.Memoir;
 import com.example.mymoviememoir.entities.Person;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
 import com.example.mymoviememoir.network.RequestHelper;
-import com.example.mymoviememoir.network.RestfulGetModel;
-import com.example.mymoviememoir.network.RestfulParameterModel;
+import com.example.mymoviememoir.network.interfaces.RestfulGetModel;
+import com.example.mymoviememoir.network.interfaces.RestfulParameterModel;
 import com.example.mymoviememoir.network.reponse.GetAddressResponse;
 import com.example.mymoviememoir.network.reponse.Location;
 import com.example.mymoviememoir.network.request.GetAddressLATRequest;
@@ -37,13 +36,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 
 
 /**
@@ -56,15 +49,9 @@ public class MapsFragment extends BaseRequestRestfulServiceFragment implements O
 
     private Bitmap cinemaBitmap;
 
-    public MapsFragment() {
-        // Required empty public constructor
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
@@ -82,6 +69,9 @@ public class MapsFragment extends BaseRequestRestfulServiceFragment implements O
     }
 
     private void generateCinemaBitmap() {
+        /*
+        Change the icon of cinemas
+         */
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.baseline_movie_white_24);
         if (drawable instanceof BitmapDrawable) {
             cinemaBitmap = Utils.tintBitmap(((BitmapDrawable) drawable).getBitmap(), ContextCompat.getColor(getContext(), R.color.primaryColor));
@@ -99,8 +89,6 @@ public class MapsFragment extends BaseRequestRestfulServiceFragment implements O
     public void onPostExecute(RequestHelper helper, String response) {
         super.onPostExecute(helper, response);
         try {
-
-
             switch (helper.getRestfulAPI()) {
                 case GET_ADDRESS_LAT:
                     GetAddressResponse addressResponse = GsonUtils.fromJsonToObject(response, GetAddressResponse.class);

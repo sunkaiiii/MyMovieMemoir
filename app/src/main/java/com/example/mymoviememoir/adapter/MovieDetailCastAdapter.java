@@ -16,6 +16,9 @@ import com.example.mymoviememoir.network.reponse.CastItem;
 
 import java.util.List;
 
+/**
+ * @author sunkai
+ */
 public class MovieDetailCastAdapter extends RecyclerView.Adapter<MovieDetailCastAdapter.CastViewHolder> {
     private List<CastItem> castItems;
 

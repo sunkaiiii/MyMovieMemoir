@@ -33,11 +33,17 @@
     </string-array>
 
     <string-array name="sort_options">
-        <item>watching date</item>
-        <item>rating score</item>
-        <item>public rating</item>
+        <item>Watching date</item>
+        <item>Rating score</item>
+        <item>Public rating</item>
     </string-array>
-
+    <string-array name="filter_options">
+        <item>No filter</item>
+        <item>This year</item>
+        <item>Select a year</item>
+        <item>Positive rating</item>
+        <item>Negative rating</item>
+    </string-array>
     <string-array name="pie_years">
         <item>Select a year</item>
         <item>2015</item>
@@ -69,4 +75,8 @@
     <string name="welcome2">Welcome,</string>
     <string name="no_memoir_notification">You currently don\'t have a memoir.</string>
     <string name="show_password">Show Password</string>
+    <string name="sort_option">Sort:</string>
+    <string name="filter_option">Filter:</string>
+    <string name="ok">OK</string>
+    <string name="view">View</string>
 </resources>

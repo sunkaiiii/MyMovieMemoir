@@ -1,6 +1,6 @@
 package com.example.mymoviememoir.network.request;
 
-import com.example.mymoviememoir.network.RestfulGetModel;
+import com.example.mymoviememoir.network.interfaces.RestfulGetModel;
 
 import java.util.Arrays;
 import java.util.List;

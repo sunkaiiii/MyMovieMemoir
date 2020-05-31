@@ -2,8 +2,14 @@ package com.example.mymoviememoir.network;
 
 import android.os.AsyncTask;
 
+import com.example.mymoviememoir.network.interfaces.RequestAction;
+
 import java.io.IOException;
 
+/**
+ * A general AsyncTask Class to implement the basic function of Network requesting
+ * @author sunkai
+ */
 public class CustomNetworkAsyncTask extends AsyncTask<RequestHelper, RequestHelper, CustomNetworkAsyncTask.CustomNetworkResponse> {
     private RequestHelper requestHelper;
     private RequestAction requestAction;

@@ -14,6 +14,9 @@ import com.example.mymoviememoir.utils.BagOfWordsUtils;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * @author sunkai
+ */
 public class UserAttitudeViewPagerAdapter extends FragmentStateAdapter {
     private Map<BagOfWordsUtils.Classification, ArrayList<StatusesItem>> attitudeStrings;
 

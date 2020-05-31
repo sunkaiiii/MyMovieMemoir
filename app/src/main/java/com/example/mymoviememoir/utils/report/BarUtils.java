@@ -15,6 +15,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,9 +53,13 @@ public class BarUtils {
         PieDataSet dataSet = new PieDataSet(entries, "Watched Movie Per Suburb");
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new ValueFormatter() {
+            /*
+            To make the format of percentage string being xx.xx%, using DecimalFormat class
+             */
             @Override
             public String getFormattedValue(float value) {
-                return value * 100 + "%";
+                DecimalFormat decimalFormat = new DecimalFormat(".00");
+                return decimalFormat.format(value*100)+"%";
             }
         });
         dataSet.setColors(getPieChartColour(context, movieSuburbResponses, count));
@@ -71,6 +76,10 @@ public class BarUtils {
     }
 
     private static List<Integer> getPieChartColour(Context context, final List<MovieSuburbResponse> movieSuburbResponses, final int totalCount) {
+        /*
+        The colour of each part in the pie chart is decided by the weight which is the number of percentages.
+        The percentage is higher, the colour will be darker.
+         */
         List<Integer> colours = new ArrayList<>();
         int secondaryLightColor = ContextCompat.getColor(context, R.color.secondaryLightColor);
         int secondaryDarkColor = ContextCompat.getColor(context, R.color.secondaryDarkColor);
@@ -78,12 +87,14 @@ public class BarUtils {
         float[] dColor = new float[3];
         ColorUtils.colorToHSL(secondaryLightColor, lColor);
         ColorUtils.colorToHSL(secondaryDarkColor, dColor);
+        //calculate the distance of luminance of two colours
         final float brightnessGap = lColor[2] - dColor[2];
         dColor[2] = lColor[2];
         for (MovieSuburbResponse response : movieSuburbResponses) {
             if (response.getCount() == 0) {
                 continue;
             }
+            //ensure the value of luminance of each part.
             colours.add(ColorUtils.HSLToColor(dColor));
             dColor[2] = (dColor[2] - (response.getCount() / 1.0f / totalCount) * brightnessGap);
         }

@@ -1,5 +1,12 @@
 package com.example.mymoviememoir.network;
 
+import com.example.mymoviememoir.network.interfaces.RestfulBodyModel;
+import com.example.mymoviememoir.network.interfaces.RestfulDeleteModel;
+import com.example.mymoviememoir.network.interfaces.RestfulGetModel;
+import com.example.mymoviememoir.network.interfaces.RestfulParameterModel;
+import com.example.mymoviememoir.network.interfaces.RestfulPostModel;
+import com.example.mymoviememoir.network.interfaces.RestfulPutModel;
+
 public class RequestHelper {
     private MyMovieMemoirRestfulAPI restfulAPI;
     private RestfulGetModel getModel;

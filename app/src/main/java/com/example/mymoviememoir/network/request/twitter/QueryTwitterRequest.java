@@ -1,6 +1,6 @@
 package com.example.mymoviememoir.network.request.twitter;
 
-import com.example.mymoviememoir.network.RestfulGetModel;
+import com.example.mymoviememoir.network.interfaces.RestfulGetModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +42,7 @@ public class QueryTwitterRequest implements RestfulGetModel {
         map.put("q", q);
         map.put("lang", "en");
         map.put("result_type", "mixed");
+        map.put("count", String.valueOf(10));
         return map;
     }
 }

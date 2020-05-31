@@ -1,8 +1,8 @@
 package com.example.mymoviememoir.dialog;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.mymoviememoir.R;
-import com.example.mymoviememoir.network.DefaultRequestHttpAction;
+import com.example.mymoviememoir.network.interfaces.DefaultRequestHttpAction;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
 import com.example.mymoviememoir.network.OkHttpNetworkConnection;
 import com.example.mymoviememoir.network.RequestHelper;
@@ -32,6 +32,16 @@ public class AddCinemaDialog extends DialogFragment implements DefaultRequestHtt
     private Button btnAdd;
 
     private OnAddCinemaSuccessListener listener;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Material_Light_Dialog_Alert);
+        } else {
+            setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Dialog_NoActionBar);
+        }
+    }
 
     @Nullable
     @Override
@@ -73,8 +83,8 @@ public class AddCinemaDialog extends DialogFragment implements DefaultRequestHtt
 
     @Override
     public void onExecuteFailed(RequestHelper helper, String message, Exception ex) {
-        if(ex instanceof OkHttpNetworkConnection.HTTPConnectionErrorException){
-            if(((OkHttpNetworkConnection.HTTPConnectionErrorException) ex).getBody().contains("duplicate key")){
+        if (ex instanceof OkHttpNetworkConnection.HTTPConnectionErrorException) {
+            if (((OkHttpNetworkConnection.HTTPConnectionErrorException) ex).getBody().contains("duplicate key")) {
                 Toast.makeText(getContext(), "The information of the cinema has been already existed, please input again", Toast.LENGTH_SHORT).show();
             }
         }

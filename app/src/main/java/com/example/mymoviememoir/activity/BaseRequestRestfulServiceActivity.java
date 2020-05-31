@@ -6,13 +6,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mymoviememoir.network.DefaultRequestHttpAction;
+import com.example.mymoviememoir.network.interfaces.DefaultRequestHttpAction;
 import com.example.mymoviememoir.network.RequestHelper;
 
 /**
  * @author sunkai
  */
 public abstract class BaseRequestRestfulServiceActivity extends AppCompatActivity implements DefaultRequestHttpAction {
+    /**
+     * Provide an uniform api for all activities
+     */
 
     @Override
     public void preExecute(RequestHelper helper) {

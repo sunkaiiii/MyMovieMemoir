@@ -18,8 +18,8 @@ import com.example.mymoviememoir.entities.Credentials;
 import com.example.mymoviememoir.entities.Person;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
 import com.example.mymoviememoir.network.RequestHelper;
-import com.example.mymoviememoir.network.RestfulGetModel;
-import com.example.mymoviememoir.network.RestfulPostModel;
+import com.example.mymoviememoir.network.interfaces.RestfulGetModel;
+import com.example.mymoviememoir.network.interfaces.RestfulPostModel;
 import com.example.mymoviememoir.network.request.SignUpCredentialRequest;
 import com.example.mymoviememoir.utils.CredentialInfoUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
 public class SignUpActivity extends BaseRequestRestfulServiceActivity {
     /**
      * Use regex to make an mail validation
-     * reference the regex string from
+     * reference the regex pattern from
      * http://regexlib.com/Search.aspx?k=email&AspxAutoDetectCookieSupport=1
      */
     private final String REGEX = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$";
@@ -193,6 +193,10 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
     }
 
 
+    /**
+     * Input validation
+     * @return true if the user has input right information.
+     */
     private boolean isInformationValid() {
         boolean success = true;
         if (!isValidEmail(eEmail.getText().toString())) {
@@ -203,11 +207,11 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
             ePostcode.setError("the post code is invalid");
             success = false;
         }
-        if (TextUtils.isEmpty(ePassword.getText())) {
+        if (Utils.isBlank(ePassword.getText())) {
             ePassword.setError("the password cannot be empty");
             success = false;
         }
-        if (TextUtils.isEmpty(eCheckedPassword.getText())) {
+        if (Utils.isBlank(eCheckedPassword.getText())) {
             eCheckedPassword.setError("the password cannot be empty");
             success = false;
         }
@@ -215,7 +219,7 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
             eAddress.setError("The address cannot be empty");
             success = false;
         }
-        if (!TextUtils.equals(eCheckedPassword.getText(), ePassword.getText()) && !TextUtils.isEmpty(ePassword.getText()) && !TextUtils.isEmpty(eCheckedPassword.getText())) {
+        if (!TextUtils.equals(eCheckedPassword.getText(), ePassword.getText()) && !Utils.isBlank(ePassword.getText()) && !Utils.isBlank(eCheckedPassword.getText())) {
             ePassword.setError("the password and checked password are not matched");
             eCheckedPassword.setError("the password and checked password are not matched");
             success = false;
@@ -232,7 +236,7 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
     }
 
     private boolean isValidEmail(@Nullable String email) {
-        if (TextUtils.isEmpty(email)) {
+        if (Utils.isBlank(email)) {
             return false;
         }
         final Pattern pattern = Pattern.compile(REGEX);
@@ -249,7 +253,7 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
 
     private boolean isValidPostCode(@Nullable String mState) {
 
-        if (TextUtils.isEmpty(mState) || mState.length() != 4) {
+        if (Utils.isBlank(mState) || mState.length() != 4) {
             return false;
         }
         for (char c : mState.toCharArray()) {
@@ -283,7 +287,7 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
         UNKNOWN("Unknown");
         String genderSymbol;
 
-        private Gender(String s) {
+        Gender(String s) {
             this.genderSymbol = s;
         }
 

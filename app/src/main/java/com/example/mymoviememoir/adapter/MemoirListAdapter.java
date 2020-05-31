@@ -1,6 +1,5 @@
 package com.example.mymoviememoir.adapter;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mymoviememoir.R;
-import com.example.mymoviememoir.activity.MovieDetailViewActivity;
 import com.example.mymoviememoir.entities.Memoir;
 import com.example.mymoviememoir.utils.Values;
 import com.example.mymoviememoir.view.RatingSelectView;
@@ -21,7 +19,7 @@ import java.util.List;
 
 public class MemoirListAdapter extends RecyclerView.Adapter<MemoirListAdapter.MemoirHolder> {
     private List<Memoir> memoirs;
-
+    private OnMemoirClickListener listener;
 
     public MemoirListAdapter(List<Memoir> memoirs) {
         this.memoirs = memoirs;
@@ -87,18 +85,28 @@ public class MemoirListAdapter extends RecyclerView.Adapter<MemoirListAdapter.Me
         holder.ratingScore.setEnabled(false);
         holder.ratingScore.setRating((float) memoir.getRatingScore());
         holder.publicRating.setText(String.valueOf(memoir.getPublicRating()));
+        /*
+        To request startActivityForResult method
+        Make a callback to the Fragment
+         */
         holder.itemView.setOnClickListener((v) -> {
-            final Intent intent = new Intent(v.getContext(), MovieDetailViewActivity.class);
-            intent.putExtra(MovieDetailViewActivity.ID, memoir.getMovieId());
-            intent.putExtra(MovieDetailViewActivity.MOVIE_NAME, memoir.getMovieName());
-            intent.putExtra(MovieDetailViewActivity.RELEASE_DATE, memoir.getMovieReleaseDate());
-            v.getContext().startActivity(intent);
+            if(listener!=null){
+                listener.onItemClick(v,memoir);
+            }
         });
     }
 
     @Override
     public int getItemCount() {
         return memoirs == null ? 0 : memoirs.size();
+    }
+
+    public interface OnMemoirClickListener{
+        void onItemClick(View v, Memoir data);
+    }
+
+    public void setOnMemoirClickListener(OnMemoirClickListener listener) {
+        this.listener = listener;
     }
 
     public void setNewData(List<Memoir> newData) {

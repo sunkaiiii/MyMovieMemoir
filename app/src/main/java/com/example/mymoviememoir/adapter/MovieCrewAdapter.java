@@ -13,6 +13,9 @@ import com.example.mymoviememoir.network.reponse.CrewItem;
 
 import java.util.List;
 
+/**
+ * @author sunkai
+ */
 public class MovieCrewAdapter extends RecyclerView.Adapter<MovieCrewAdapter.CrewHolder> {
     private List<CrewItem> crewItems;
 

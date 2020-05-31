@@ -15,7 +15,7 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 
 @Dao
 public interface WatchListDAO {
-    @Query("SELECT * FROM WatchList")
+    @Query("SELECT * FROM WatchList ORDER BY added_date_time DESC")
     LiveData<List<WatchList>> getAll();
 
     @Query("SELECT * FROM WatchList WHERE modie_id=:movieId LIMIT 1")

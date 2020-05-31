@@ -178,7 +178,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:background="@drawable/movie_detail_button_drawable"
-                    android:drawableStart="@drawable/baseline_star_black_18"
+                    android:drawableStart="@drawable/baseline_create_black_18"
                     android:drawablePadding="4dp"
                     android:gravity="center"
                     android:text="@string/memoir"

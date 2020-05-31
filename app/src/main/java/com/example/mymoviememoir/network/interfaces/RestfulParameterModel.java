@@ -1,4 +1,4 @@
-package com.example.mymoviememoir.network;
+package com.example.mymoviememoir.network.interfaces;
 
 import java.util.HashMap;
 import java.util.List;

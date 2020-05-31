@@ -1,7 +1,11 @@
 package com.example.mymoviememoir.network;
 
+/**
+ * @author sunkai
+ */
+
 public enum RequestHost {
-    LOCAL_HOST("192.168.0.189", OkHttpNetworkConnection.SCHEME_HTTP, 13219),
+    LOCAL_HOST("10.0.2.2", OkHttpNetworkConnection.SCHEME_HTTP, 13219),
     MOVIE_DB_HOST("api.themoviedb.org", OkHttpNetworkConnection.SCHEME_HTTPS, 443),
     MOVIE_DB_IMAGE_HOST("https://image.tmdb.org/t/p/w500", OkHttpNetworkConnection.SCHEME_HTTPS, 443),
     GOOGLE_MAPS("maps.googleapis.com", OkHttpNetworkConnection.SCHEME_HTTPS, 443),

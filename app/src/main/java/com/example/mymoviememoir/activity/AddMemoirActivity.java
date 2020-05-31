@@ -6,7 +6,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.transition.Fade;
 import android.transition.TransitionInflater;
 import android.view.View;
 import android.view.Window;
@@ -34,7 +33,7 @@ import com.example.mymoviememoir.entities.Cinema;
 import com.example.mymoviememoir.entities.Memoir;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
 import com.example.mymoviememoir.network.RequestHelper;
-import com.example.mymoviememoir.network.RestfulGetModel;
+import com.example.mymoviememoir.network.interfaces.RestfulGetModel;
 import com.example.mymoviememoir.network.reponse.SimpleStringResponse;
 import com.example.mymoviememoir.network.request.AddCinemaRequest;
 import com.example.mymoviememoir.utils.ColorUtils;
@@ -61,6 +60,8 @@ public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
     public static final String MOVIE_RELEASE_DATE = "movie_release_date";
     public static final String MOVIE_IMAGE = "movie_image";
     public static final String PUBLIC_RATING = "public rating";
+    public static final int ADD_MEMOIR = 1;
+    public static final int ADD_SUCCESS = 11;
     private View parentView;
     private ImageView movieImage;
     private TextView movieName;
@@ -115,6 +116,7 @@ public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
                 return false;
             }
 
+            //Change the background colour depended on the image theme colour
             @Override
             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                 if (resource instanceof BitmapDrawable) {
@@ -156,9 +158,11 @@ public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
     }
 
     private void addNewMemoir(View v) {
+        /*
+        Input validation
+         */
         if (Utils.isBlank(movieComment.getText())) {
             showToast("Comment cannot be empty");
-            ;
             return;
         }
         if (selectedWatchedDate == null) {
@@ -251,6 +255,7 @@ public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
                     break;
                 case ADD_MOVIE_MEMOIR:
                     Toast.makeText(this, "Add Memoir Successfully!", Toast.LENGTH_SHORT).show();
+                    setResult(ADD_SUCCESS);
                     onBackPressed();
                 default:
                     break;
@@ -266,6 +271,10 @@ public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
         nameSpinnerAdapter.add(request.getCinemaName());
         ArrayAdapter<String> locationSpinnerAdapter = (ArrayAdapter<String>) cinemaSuburbSpinner.getAdapter();
         locationSpinnerAdapter.add(request.getLocationSuburb());
+        /*
+        When user has successfully added a new cinema
+        make sure that the current selection of the spinner is the new cinema.
+         */
         cinemaNameSpinner.setSelection(nameSpinnerAdapter.getCount() - 1, true);
         cinemaSuburbSpinner.setSelection(locationSpinnerAdapter.getCount() - 1, true);
     }

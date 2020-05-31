@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -20,7 +19,7 @@ import com.example.mymoviememoir.entities.Credentials;
 import com.example.mymoviememoir.entities.Person;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
 import com.example.mymoviememoir.network.RequestHelper;
-import com.example.mymoviememoir.network.RestfulGetModel;
+import com.example.mymoviememoir.network.interfaces.RestfulGetModel;
 import com.example.mymoviememoir.network.request.SignInRequest;
 import com.example.mymoviememoir.utils.CredentialInfoUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
@@ -108,7 +107,6 @@ public class SignInActivity extends BaseRequestRestfulServiceActivity implements
     private void setEnableButtons(boolean enable) {
         signInBtn.setEnabled(enable);
         signUpBtn.setEnabled(enable);
-
     }
 
     @Override
@@ -119,19 +117,17 @@ public class SignInActivity extends BaseRequestRestfulServiceActivity implements
                 case SIGN_IN:
                     if (TextUtils.isEmpty(response)) {
                         Toast.makeText(this, "username or password is error, please try again", Toast.LENGTH_SHORT).show();
+                        setEnableButtons(true);
                         return;
                     }
                     Credentials credentials = GsonUtils.fromJsonToObject(response, Credentials.class);
                     CredentialInfoUtils.setInstance(this, credentials);
                     getPersonInformation(credentials.getId());
-
                     break;
                 case GET_PERSON_INFORMATIOIN:
-
                     Person personInformation = GsonUtils.fromJsonToObject(response, Person.class);
                     PersonInfoUtils.setInstance(this, personInformation);
                     navigateToHomeScreen();
-
                     break;
                 default:
                     break;

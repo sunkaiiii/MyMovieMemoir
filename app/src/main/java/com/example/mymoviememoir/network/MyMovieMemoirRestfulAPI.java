@@ -1,6 +1,9 @@
 package com.example.mymoviememoir.network;
 
+import com.example.mymoviememoir.network.interfaces.RestfulAPI;
+
 /**
+ * All the request APIs used in this Application should be added in this Class
  * @author sunkai
  */
 

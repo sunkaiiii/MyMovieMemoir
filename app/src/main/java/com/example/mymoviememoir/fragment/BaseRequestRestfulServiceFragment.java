@@ -2,7 +2,7 @@ package com.example.mymoviememoir.fragment;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.mymoviememoir.network.DefaultRequestHttpAction;
+import com.example.mymoviememoir.network.interfaces.DefaultRequestHttpAction;
 import com.example.mymoviememoir.network.RequestHelper;
 
 /**

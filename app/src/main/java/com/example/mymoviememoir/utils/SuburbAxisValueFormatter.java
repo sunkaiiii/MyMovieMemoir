@@ -4,6 +4,9 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.util.List;
 
+/**
+ * @author sunkai
+ */
 public class SuburbAxisValueFormatter extends ValueFormatter {
     List<String> month;
 

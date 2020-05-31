@@ -128,6 +128,9 @@ public class ReportFragment extends BaseRequestRestfulServiceFragment {
             months.add(m.getMonth());
         }
         barChart.getAxisRight().setEnabled(false);
+        /*
+        Format integer to Month String
+         */
         BarUtils.initBarChart(barChart, new SuburbAxisValueFormatter(months), new MyValueFormmater());
         BarDataSet set;
         if (barChart.getData() != null && barChart.getData().getDataSetCount() > 0) {
@@ -137,6 +140,7 @@ public class ReportFragment extends BaseRequestRestfulServiceFragment {
             barChart.notifyDataSetChanged();
         } else {
             set = new BarDataSet(values, "The number of watched movie per month in a year");
+            set.setColor(ContextCompat.getColor(getContext(), R.color.secondaryLightColor));
             ArrayList<IBarDataSet> dataSets = new ArrayList<>();
             dataSets.add(set);
             set.setGradientColor(ContextCompat.getColor(getContext(), R.color.secondaryLightColor), ContextCompat.getColor(getContext(), R.color.secondaryLightColor));
