@@ -13,7 +13,6 @@
     <string name="checked_password">checked password</string>
     <string name="state">state</string>
     <string name="create_account">create account</string>
-    <string name="birthday">birthday</string>
     <string name="home_screen">Home Screen</string>
     <string name="movie_search">Movie Search</string>
     <string name="movie_memoir">Movie Memoir</string>
@@ -55,7 +54,6 @@
     </string-array>
 
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="overview">Overview</string>
     <string name="memoir">Memoir</string>
     <string name="watch_list">Watch List</string>
@@ -72,7 +70,6 @@
     <string name="open">Open</string>
     <string name="welcome">Welcome to use</string>
     <string name="my_movie_memoir">My Movie Memoir!</string>
-    <string name="welcome2">Welcome,</string>
     <string name="no_memoir_notification">You currently don\'t have a memoir.</string>
     <string name="show_password">Show Password</string>
     <string name="sort_option">Sort:</string>
