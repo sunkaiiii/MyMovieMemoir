@@ -24,6 +24,7 @@ import com.example.mymoviememoir.network.reponse.MovieSearchListItem;
 import com.example.mymoviememoir.network.reponse.MovieSearchListResponse;
 import com.example.mymoviememoir.network.request.SearchMovieRequest;
 import com.example.mymoviememoir.utils.GsonUtils;
+import com.example.mymoviememoir.utils.Utils;
 
 import java.util.List;
 
@@ -58,6 +59,7 @@ public class MovieSearchFragment extends BaseRequestRestfulServiceFragment {
             SearchMovieRequest searchMovieRequest = new SearchMovieRequest();
             searchMovieRequest.setQuery(movieName);
             requestRestfulService(MyMovieMemoirRestfulAPI.SEARCH_MOVIE_BY_NAME, searchMovieRequest);
+            Utils.hideSoftKeyboard(getContext(),getView().getRootView().getWindowToken());
         });
         searchMovieList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

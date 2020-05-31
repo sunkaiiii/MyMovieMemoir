@@ -1,5 +1,7 @@
 package com.example.mymoviememoir.utils;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
@@ -7,8 +9,11 @@ import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.IBinder;
 import android.text.TextUtils;
+import android.view.inputmethod.InputMethodManager;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 public class Utils {
@@ -19,8 +24,9 @@ public class Utils {
     /**
      * references on
      * https://stackoverflow.com/questions/49791066/tinting-the-google-map-icon
+     *
      * @param source the original bitmap
-     * @param color tinting color
+     * @param color  tinting color
      * @return tint bitmap
      */
     public static Bitmap tintBitmap(Bitmap source, int color) {
@@ -31,5 +37,13 @@ public class Utils {
         Canvas canvas = new Canvas(resultBitmap);
         canvas.drawBitmap(resultBitmap, 0, 0, p);
         return resultBitmap;
+    }
+
+
+    public static void hideSoftKeyboard(@NonNull Context context, @NonNull IBinder windowToken) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(windowToken, 0);
+        }
     }
 }

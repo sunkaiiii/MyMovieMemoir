@@ -175,8 +175,9 @@ public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
         }
         if (checkSpinnerIsInvalid(cinemaSuburbSpinner)) {
             showToast("please select a suburb");
+            return;
         }
-
+        Utils.hideSoftKeyboard(this, getWindow().getDecorView().getWindowToken());
         requestRestfulService(MyMovieMemoirRestfulAPI.GET_CINEMA_BY_NAME_AND_SUBURB, (RestfulGetModel) ()
                 -> Arrays.asList(cinemaNameSpinner.getSelectedItem().toString(), cinemaSuburbSpinner.getSelectedItem().toString()));
     }

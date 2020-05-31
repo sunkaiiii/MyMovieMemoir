@@ -26,6 +26,7 @@ import com.example.mymoviememoir.utils.CredentialInfoUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
 import com.example.mymoviememoir.utils.PasswordUtils;
 import com.example.mymoviememoir.utils.PersonInfoUtils;
+import com.example.mymoviememoir.utils.Utils;
 import com.example.mymoviememoir.utils.Values;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -55,6 +56,7 @@ public class SignInActivity extends BaseRequestRestfulServiceActivity implements
                 startActivityForResult(new Intent(this, SignUpActivity.class), SIGN_UP);
                 break;
             case R.id.sign_in_btn:
+                Utils.hideSoftKeyboard(this, getWindow().getDecorView().getWindowToken());
                 requestSignIn();
                 break;
             default:
