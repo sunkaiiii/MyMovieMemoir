@@ -29,6 +29,7 @@ import com.example.mymoviememoir.network.RequestHelper;
 import com.example.mymoviememoir.network.interfaces.RestfulGetModel;
 import com.example.mymoviememoir.utils.CredentialInfoUtils;
 import com.example.mymoviememoir.utils.GsonUtils;
+import com.example.mymoviememoir.utils.PersonInfoUtils;
 import com.example.mymoviememoir.utils.Values;
 
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public class MemoirFragment extends BaseRequestRestfulServiceFragment {
         } else {
             api = MyMovieMemoirRestfulAPI.GET_MEMOIR_BY_ID;
         }
-        requestRestfulService(api, (RestfulGetModel) () -> Collections.singletonList(String.valueOf(CredentialInfoUtils.getId())));
+        requestRestfulService(api, (RestfulGetModel) () -> Collections.singletonList(String.valueOf(PersonInfoUtils.getPersonInstance().getId())));
     }
 
     @Override

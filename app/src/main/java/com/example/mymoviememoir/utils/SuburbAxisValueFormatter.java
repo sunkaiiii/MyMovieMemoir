@@ -17,6 +17,11 @@ public class SuburbAxisValueFormatter extends ValueFormatter {
     @Override
     public String getFormattedValue(float value) {
         int index = (int) value;
-        return month.get(index);
+        if (month != null && index < month.size()) {
+            return month.get(index);
+        } else {
+            return String.valueOf(index);
+        }
+
     }
 }
