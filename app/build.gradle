@@ -1,20 +1,21 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 30
 
     defaultConfig {
         applicationId "com.example.mymoviememoir"
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    defaultConfig {
+        multiDexEnabled true
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -22,6 +23,7 @@ android {
         }
     }
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -57,4 +59,7 @@ dependencies {
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    //full java8 support
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.5'
 }

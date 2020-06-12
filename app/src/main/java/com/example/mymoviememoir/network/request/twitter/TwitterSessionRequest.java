@@ -2,14 +2,17 @@ package com.example.mymoviememoir.network.request.twitter;
 
 import android.util.Base64;
 
-import com.example.mymoviememoir.network.RestfulPostModel;
-import com.example.mymoviememoir.network.request.base.BasePostModel;
+import com.example.mymoviememoir.network.interfaces.RestfulPostModel;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The way to get session token of Twitter references on
+ * https://iq.opengenus.org/standard-search-api-twitter/
+ */
 public class TwitterSessionRequest implements RestfulPostModel {
     private final String apiKey = "";
     private final String privateSecretKey = "";

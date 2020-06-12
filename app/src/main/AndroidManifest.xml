@@ -3,7 +3,6 @@
     package="com.example.mymoviememoir">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,9 +11,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.AddMemoirActivity"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="" />
+
+        <activity android:name=".activity.AddMemoirActivity"/>
         <activity android:name=".activity.MovieDetailViewActivity" />
-        <activity android:name=".activity.MovieViewActivity" />
         <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.SignUpActivity" />
         <activity android:name=".activity.SignInActivity">
