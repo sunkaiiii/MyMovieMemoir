@@ -24,6 +24,7 @@ import com.example.mymoviememoir.utils.GsonUtils;
 import com.example.mymoviememoir.utils.PersonInfoUtils;
 import com.example.mymoviememoir.utils.Values;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -62,16 +63,16 @@ public class HomeFragment extends BaseRequestRestfulServiceFragment {
 
     private void getMovieInformation() {
         requestRestfulService(MyMovieMemoirRestfulAPI.GET_USER_RECENT_YEAR_HIGHEST_MOVIE_INFORMATION,
-                (RestfulGetModel) () -> Collections.singletonList(String.valueOf(PersonInfoUtils.getPersonInstance().getId())));
+                (RestfulGetModel) () -> Collections.singletonList(String.valueOf(PersonInfoUtils.getPersonInstance().orElse(new Person()).getId())));
     }
 
     private void readPersonInformation() {
-        mViewModel.setPerson(PersonInfoUtils.getPersonInstance());
+        mViewModel.setPerson(PersonInfoUtils.getPersonInstance().orElse(null));
     }
 
     private void fillPersonInformation(Person signUpPersonRequest) {
         welcomeUserName.setText(String.format("Welcome, %s!", signUpPersonRequest.getFname()));
-        currentDate.setText(Values.MAIN_FRAGMENT_DISPLAY_TIME_FORMAT.format(Calendar.getInstance(Locale.getDefault()).getTime()));
+        currentDate.setText(Values.MAIN_FRAGMENT_DISPLAY_TIME_FORMAT.format(LocalDate.now()));
     }
 
     @Override

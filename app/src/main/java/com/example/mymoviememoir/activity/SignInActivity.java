@@ -31,6 +31,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
+import java.util.Optional;
 
 public class SignInActivity extends BaseRequestRestfulServiceActivity implements View.OnClickListener {
 
@@ -46,6 +47,15 @@ public class SignInActivity extends BaseRequestRestfulServiceActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         initView();
+        tryToFillUserName();
+    }
+
+    private void tryToFillUserName() {
+        final Optional<Credentials> optionalCredentials = CredentialInfoUtils.getCredentialInstance();
+        if(optionalCredentials.isPresent()){
+            final Credentials credentials = optionalCredentials.get();
+            eUsername.setText(credentials.getUsername());
+        }
     }
 
     @Override

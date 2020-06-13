@@ -1,7 +1,10 @@
 package com.example.mymoviememoir.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -33,6 +36,8 @@ public class HomeActivity extends BaseRequestRestfulServiceActivity implements N
     private Map<Integer, Fragment> fragmentMap;
     private Toolbar toolbar;
     private ActionBarDrawerToggle toggle;
+    private Handler existHandler = new Handler(Looper.getMainLooper());
+    private static final int EXIT =1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +125,24 @@ public class HomeActivity extends BaseRequestRestfulServiceActivity implements N
         }
         fragmentTransaction.commit();
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        final Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        if(!(fragment instanceof HomeFragment)){
+            final Fragment homeFragment = fragmentMap.get(R.layout.main_fragment);
+            if(homeFragment==null){
+                return;
+            }
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame,homeFragment).commit();
+            return;
+        }else if(!existHandler.hasMessages(EXIT)){
+            Toast.makeText(this, "press back again to exit the application", Toast.LENGTH_SHORT).show();
+            existHandler.sendEmptyMessageDelayed(EXIT,3000);
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override

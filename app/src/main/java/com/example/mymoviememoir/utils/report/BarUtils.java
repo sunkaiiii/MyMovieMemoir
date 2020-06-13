@@ -59,7 +59,7 @@ public class BarUtils {
             @Override
             public String getFormattedValue(float value) {
                 DecimalFormat decimalFormat = new DecimalFormat(".00");
-                return decimalFormat.format(value*100)+"%";
+                return decimalFormat.format(value * 100) + "%";
             }
         });
         dataSet.setColors(getPieChartColour(context, movieSuburbResponses, count));
@@ -68,11 +68,7 @@ public class BarUtils {
     }
 
     private static int getWatchedCount(final List<MovieSuburbResponse> movieSuburbResponses) {
-        int count = 0;
-        for (MovieSuburbResponse response : movieSuburbResponses) {
-            count += response.getCount();
-        }
-        return count;
+        return (int) movieSuburbResponses.stream().map(MovieSuburbResponse::getCount).count();
     }
 
     private static List<Integer> getPieChartColour(Context context, final List<MovieSuburbResponse> movieSuburbResponses, final int totalCount) {

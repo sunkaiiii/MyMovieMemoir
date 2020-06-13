@@ -1,10 +1,8 @@
 package com.example.mymoviememoir.network.reponse;
 
-import java.util.Date;
-
 public class MovieRatingResponse {
     private String movieName;
-    private Date releaseDate;
+    private String releaseDate;
     private double ratingScore;
 
     public String getMovieImage() {
@@ -21,7 +19,7 @@ public class MovieRatingResponse {
         this.movieName = movieName;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
 
@@ -33,7 +31,7 @@ public class MovieRatingResponse {
         return movieName;
     }
 
-    public Date getReleaseDate() {
+    public String getReleaseDate() {
         return releaseDate;
     }
 

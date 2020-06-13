@@ -15,6 +15,8 @@ import com.example.mymoviememoir.network.reponse.MovieRatingResponse;
 import com.example.mymoviememoir.utils.Values;
 import com.example.mymoviememoir.view.RatingSelectView;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -55,7 +57,8 @@ public class MovieTopRatingInformationAdapter extends RecyclerView.Adapter<Movie
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         MovieRatingResponse data = mMovies.get(position);
         holder.movieName.setText(data.getMovieName());
-        holder.movieReleaseDate.setText(Values.MAIN_FRAGMENT_DISPLAY_TIME_FORMAT.format(data.getReleaseDate()));
+        final Instant instant = Instant.from(Values.RESPONSE_FORMAT.parse(data.getReleaseDate()));
+        holder.movieReleaseDate.setText(Values.MAIN_FRAGMENT_DISPLAY_TIME_FORMAT.format(instant.atZone(ZoneId.systemDefault()).toLocalDate()));
         holder.ratingScore.setRating(data.getRatingScore());
         Glide.with(holder.itemView).load(data.getMovieImage()).into(holder.movieImage);
 

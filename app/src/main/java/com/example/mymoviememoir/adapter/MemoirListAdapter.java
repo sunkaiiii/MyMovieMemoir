@@ -15,6 +15,10 @@ import com.example.mymoviememoir.entities.Memoir;
 import com.example.mymoviememoir.utils.Values;
 import com.example.mymoviememoir.view.RatingSelectView;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 public class MemoirListAdapter extends RecyclerView.Adapter<MemoirListAdapter.MemoirHolder> {
@@ -69,8 +73,10 @@ public class MemoirListAdapter extends RecyclerView.Adapter<MemoirListAdapter.Me
         Glide.with(holder.itemView).load(memoir.getMovieImage()).into(holder.movieImage);
         holder.movieName.setText(memoir.getMovieName());
         try {
-            holder.watchedDate.setText(Values.SIMPLE_DATE_FORMAT.format(Values.RESPONSE_FORMAT.parse(memoir.getWatchedDate())));
-            holder.movieReleaseDate.setText(String.format("(%s)", Values.SIMPLE_DATE_FORMAT.format(Values.RESPONSE_FORMAT.parse(memoir.getMovieReleaseDate()))));
+            final Instant watchInstant = Instant.from(Values.RESPONSE_FORMAT.parse(memoir.getWatchedDate()));
+            final Instant releaseInstant = Instant.from(Values.RESPONSE_FORMAT.parse(memoir.getMovieReleaseDate()));
+            holder.watchedDate.setText(Values.SIMPLE_DATE_FORMAT.format(watchInstant.atZone(ZoneId.systemDefault()).toLocalDate()));
+            holder.movieReleaseDate.setText(String.format("(%s)", Values.SIMPLE_DATE_FORMAT.format(releaseInstant.atZone(ZoneId.systemDefault()).toLocalDate())));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,8 +96,8 @@ public class MemoirListAdapter extends RecyclerView.Adapter<MemoirListAdapter.Me
         Make a callback to the Fragment
          */
         holder.itemView.setOnClickListener((v) -> {
-            if(listener!=null){
-                listener.onItemClick(v,memoir);
+            if (listener != null) {
+                listener.onItemClick(v, memoir);
             }
         });
     }
@@ -101,7 +107,7 @@ public class MemoirListAdapter extends RecyclerView.Adapter<MemoirListAdapter.Me
         return memoirs == null ? 0 : memoirs.size();
     }
 
-    public interface OnMemoirClickListener{
+    public interface OnMemoirClickListener {
         void onItemClick(View v, Memoir data);
     }
 

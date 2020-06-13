@@ -54,7 +54,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.JsonObject;
 
-import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -180,8 +180,8 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
 
+    }
     private void getWatchListInformationFromDatabase(MovieDetailResponse movieDetailResponse) {
         String movieId = movieDetailResponse.getId();
         /*
@@ -197,7 +197,7 @@ public class MovieDetailViewActivity extends BaseRequestRestfulServiceActivity i
                         watchListViewModel.insert(new WatchList(movieDetailResponse.getId()
                                 , movieDetailResponse.getTitle()
                                 , Values.SIMPLE_DATE_FORMAT.format(Values.SIMPLE_DATE_FORMAT_US.parse(movieDetailResponse.getReleaseDate()))
-                                , Values.SIMPLE_DATE_FORMAT.format(Calendar.getInstance().getTime())
+                                , Values.SIMPLE_DATE_FORMAT.format(LocalDate.now())
                                 , RequestHost.MOVIE_DB_IMAGE_HOST.getHostUrl() + movieDetailResponse.getPosterPath()));
                     } catch (Exception e) {
                         e.printStackTrace();

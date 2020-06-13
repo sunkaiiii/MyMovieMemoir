@@ -23,6 +23,7 @@ import com.example.mymoviememoir.activity.MovieDetailViewActivity;
 import com.example.mymoviememoir.adapter.MemoirListAdapter;
 import com.example.mymoviememoir.dialog.SelectYearDialog;
 import com.example.mymoviememoir.entities.Memoir;
+import com.example.mymoviememoir.entities.Person;
 import com.example.mymoviememoir.fragment.models.MemoirListModel;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
 import com.example.mymoviememoir.network.RequestHelper;
@@ -32,10 +33,12 @@ import com.example.mymoviememoir.utils.GsonUtils;
 import com.example.mymoviememoir.utils.PersonInfoUtils;
 import com.example.mymoviememoir.utils.Values;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author sunkai
@@ -79,7 +82,7 @@ public class MemoirFragment extends BaseRequestRestfulServiceFragment {
         } else {
             api = MyMovieMemoirRestfulAPI.GET_MEMOIR_BY_ID;
         }
-        requestRestfulService(api, (RestfulGetModel) () -> Collections.singletonList(String.valueOf(PersonInfoUtils.getPersonInstance().getId())));
+        requestRestfulService(api, (RestfulGetModel) () -> Collections.singletonList(String.valueOf(PersonInfoUtils.getPersonInstance().orElse(new Person()).getId())));
     }
 
     @Override
@@ -159,20 +162,12 @@ public class MemoirFragment extends BaseRequestRestfulServiceFragment {
     }
 
     private List<Memoir> getMemoirOfAYear(List<Memoir> memoirs, int year) {
-        List<Memoir> result = new ArrayList<>();
         try {
-            for (Memoir memoir : memoirs) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(Values.RESPONSE_FORMAT.parse(memoir.getWatchedDate()));
-                if (year == calendar.get(Calendar.YEAR)) {
-                    result.add(memoir);
-                }
-            }
-            return result;
+            return memoirs.stream().filter(memoir -> LocalDate.parse(memoir.getWatchedDate(), Values.REQUESTING_FORMAT).getYear() == year).collect(Collectors.toList());
         } catch (Exception e) {
             e.printStackTrace();
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
     }
 
     private void initView(View view) {

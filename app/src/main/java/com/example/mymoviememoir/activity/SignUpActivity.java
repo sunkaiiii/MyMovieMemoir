@@ -29,6 +29,9 @@ import com.example.mymoviememoir.utils.Utils;
 import com.example.mymoviememoir.utils.Values;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +48,7 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
 
     private View btnSelectBirthday;
 
-    private Calendar m_birthday;
+    private LocalDate m_birthday;
 
     private TextInputEditText eFirstName;
     private TextInputEditText eLastName;
@@ -84,10 +87,9 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         btnSelectBirthday.setOnClickListener(v -> new DatePickerDialog(SignUpActivity.this, (view, year, month, dayOfMonth) -> {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(year, month, dayOfMonth);
-            m_birthday = calendar;
-            tvShowBirthday.setText(String.format("The birthday is: %s", Values.SIMPLE_DATE_FORMAT.format(calendar.getTime())));
+            LocalDate selectBirthday = LocalDate.of(year, month+1, dayOfMonth);
+            m_birthday = selectBirthday;
+            tvShowBirthday.setText(String.format("The birthday is: %s", m_birthday.format(Values.SIMPLE_DATE_FORMAT)));
             tvShowBirthday.setVisibility(View.VISIBLE);
             if (!isValidBirthDay(m_birthday)) {
                 findViewById(R.id.tv_error_birthday_text).setVisibility(View.VISIBLE);
@@ -124,7 +126,7 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
     private void tryToSignPerson(int id, SignUpCredentialRequest request) {
         Person personRequest = new Person();
         personRequest.setCredentialsId(new Credentials(id, request.getUsername(), request.getPassword()));
-        personRequest.setDob(Values.REQUESTING_FORMAT.format(m_birthday.getTime()));
+        personRequest.setDob(LocalDateTime.of(m_birthday, LocalTime.now()).format(Values.REQUESTING_FORMAT));
         personRequest.setFname(eFirstName.getText().toString());
         personRequest.setState(spState.getSelectedItem().toString());
         personRequest.setPostcode(ePostcode.getText().toString());
@@ -195,6 +197,7 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
 
     /**
      * Input validation
+     *
      * @return true if the user has input right information.
      */
     private boolean isInformationValid() {
@@ -243,11 +246,11 @@ public class SignUpActivity extends BaseRequestRestfulServiceActivity {
         return pattern.matcher(email).matches();
     }
 
-    private boolean isValidBirthDay(@Nullable Calendar birthday) {
+    private boolean isValidBirthDay(@Nullable LocalDate birthday) {
         if (birthday == null) {
             return false;
         }
-        return birthday.compareTo(Calendar.getInstance(Locale.getDefault())) < 0;
+        return birthday.compareTo(LocalDate.now()) < 0;
     }
 
 

@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.example.mymoviememoir.R;
+import com.example.mymoviememoir.entities.Person;
 import com.example.mymoviememoir.fragment.models.MoviePerYearModel;
 import com.example.mymoviememoir.fragment.models.MovieSuburbModel;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
@@ -37,6 +38,7 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -54,8 +56,8 @@ public class ReportFragment extends BaseRequestRestfulServiceFragment {
     private PieChart pieChart;
     private BarChart barChart;
 
-    private Calendar startingDay;
-    private Calendar endingDay;
+    private LocalDate startingDay;
+    private LocalDate endingDay;
 
     private MovieSuburbModel movieSuburbModel;
     private MoviePerYearModel moviePerYearModel;
@@ -85,10 +87,10 @@ public class ReportFragment extends BaseRequestRestfulServiceFragment {
         barChart = view.findViewById(R.id.bar_chart);
         pieSpinner = view.findViewById(R.id.pie_spinner);
         if (startingDay != null) {
-            startingDateTv.setText(Values.SIMPLE_DATE_FORMAT.format(startingDay.getTime()));
+            startingDateTv.setText(Values.SIMPLE_DATE_FORMAT.format(startingDay));
         }
         if (endingDay != null) {
-            startingDateTv.setText(Values.SIMPLE_DATE_FORMAT.format(endingDay.getTime()));
+            startingDateTv.setText(Values.SIMPLE_DATE_FORMAT.format(endingDay));
         }
         if (startingDay != null && endingDay != null) {
             tryToRequestNUmberOfWatching();
@@ -105,7 +107,7 @@ public class ReportFragment extends BaseRequestRestfulServiceFragment {
                 }
                 String[] yearArray = getResources().getStringArray(R.array.pie_years);
                 String year = yearArray[position];
-                FindNumberOfPersonWatchedOfAYearRequest request = new FindNumberOfPersonWatchedOfAYearRequest(PersonInfoUtils.getPersonInstance().getId(), year);
+                FindNumberOfPersonWatchedOfAYearRequest request = new FindNumberOfPersonWatchedOfAYearRequest(PersonInfoUtils.getPersonInstance().orElse(new Person()).getId(), year);
                 requestRestfulService(MyMovieMemoirRestfulAPI.FIND_NUMBER_OF_PERSON_WATCHED_MOVIE_OF_A_YEAR, request);
             }
 
@@ -160,35 +162,34 @@ public class ReportFragment extends BaseRequestRestfulServiceFragment {
 
 
     private void showDatePickerDialog(final View v) {
-        Calendar calendar = Calendar.getInstance();
+        LocalDate today = LocalDate.now();
         final Context context = getContext();
         if (context == null) {
             return;
         }
         new DatePickerDialog(context, (view, year, month, dayOfMonth) -> {
-            Calendar selectDay = Calendar.getInstance();
-            selectDay.set(year, month, dayOfMonth);
+            LocalDate selectDate = LocalDate.of(year, month + 1, dayOfMonth);
             switch (v.getId()) {
                 case R.id.starting_date_btn:
-                    this.startingDay = selectDay;
-                    startingDateTv.setText(Values.SIMPLE_DATE_FORMAT.format(selectDay.getTime()));
+                    this.startingDay = selectDate;
+                    startingDateTv.setText(Values.SIMPLE_DATE_FORMAT.format(selectDate));
                     break;
                 case R.id.ending_date_btn:
-                    endingDateTv.setText(Values.SIMPLE_DATE_FORMAT.format(selectDay.getTime()));
-                    this.endingDay = selectDay;
+                    endingDateTv.setText(Values.SIMPLE_DATE_FORMAT.format(selectDate));
+                    this.endingDay = selectDate;
                     break;
                 default:
                     break;
             }
             tryToRequestNUmberOfWatching();
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        }, today.getYear(), today.getMonthValue() - 1, today.getDayOfMonth()).show();
     }
 
     private void tryToRequestNUmberOfWatching() {
         if (startingDay == null || endingDay == null) {
             return;
         }
-        MovieSuburbRequest movieSuburbRequest = new MovieSuburbRequest(PersonInfoUtils.getPersonInstance().getId(), Values.SIMPLE_DATE_FORMAT.format(startingDay.getTime()), Values.SIMPLE_DATE_FORMAT.format(endingDay.getTime()));
+        MovieSuburbRequest movieSuburbRequest = new MovieSuburbRequest(PersonInfoUtils.getPersonInstance().orElse(new Person()).getId(), Values.SIMPLE_DATE_FORMAT.format(startingDay), Values.SIMPLE_DATE_FORMAT.format(endingDay));
         requestRestfulService(MyMovieMemoirRestfulAPI.GET_NUMBER_OF_CINEMAS_DURING_PERIOD_BY_PERSON_ID, movieSuburbRequest);
     }
 

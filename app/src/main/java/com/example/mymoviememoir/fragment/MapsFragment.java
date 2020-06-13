@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -79,7 +80,11 @@ public class MapsFragment extends BaseRequestRestfulServiceFragment implements O
     }
 
     private void getUserAddress() {
-        final Person person = PersonInfoUtils.getPersonInstance();
+        final Optional<Person> personOptional = PersonInfoUtils.getPersonInstance();
+        if(!personOptional.isPresent()){
+            return;
+        }
+        final Person person = personOptional.get();
         final String address = String.format("%s,%s,%s", person.getAddress().replace(' ', '+'), person.getState(), person.getPostcode());
         requestRestfulService(MyMovieMemoirRestfulAPI.GET_ADDRESS_LAT, new GetAddressLATRequest(address));
         requestRestfulService(MyMovieMemoirRestfulAPI.GET_ALL_CINEMA, (RestfulGetModel) ArrayList::new);
@@ -113,7 +118,7 @@ public class MapsFragment extends BaseRequestRestfulServiceFragment implements O
     }
 
     private void tryToSetMyLocation(Location location, RestfulParameterModel pathRequestModel) {
-        if (mMap == null || location == null) {
+        if (mMap == null || location == null || pathRequestModel == null) {
             return;
         }
 
@@ -123,7 +128,7 @@ public class MapsFragment extends BaseRequestRestfulServiceFragment implements O
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         } else {
             //Adding a random number to make a slight movement of the icon to avoid cinemas from the same suburb overlapping in the map.
-            LatLng latLng = new LatLng(location.getLat() + Math.random()/100.0, location.getLng() + Math.random()/100.0);
+            LatLng latLng = new LatLng(location.getLat() + Math.random() / 100.0, location.getLng() + Math.random() / 100.0);
             GetCinemaLATRequest requestModel = (GetCinemaLATRequest) pathRequestModel;
             mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromBitmap(cinemaBitmap)).title(String.format("%s, %s", requestModel.getCinemaName(), requestModel.getCinemaSuburb())));
         }

@@ -1,6 +1,7 @@
 package com.example.mymoviememoir.utils;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class Values {
@@ -8,10 +9,10 @@ public class Values {
     public static final String USER_INFO = "user_info";
     public static final String PERSON = "person";
     public static final String CREDENTIALS = "credentials";
-    public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-    public static final SimpleDateFormat SIMPLE_DATE_FORMAT_US = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    public static final SimpleDateFormat REQUESTING_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault());
-    public static final SimpleDateFormat RESPONSE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
-    public static final SimpleDateFormat MAIN_FRAGMENT_DISPLAY_TIME_FORMAT = new SimpleDateFormat("d MMM yyyy  EEE");
+    public static final DateTimeFormatter SIMPLE_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public static final DateTimeFormatter SIMPLE_DATE_FORMAT_US = DateTimeFormatter.ISO_LOCAL_DATE;
+    public static final DateTimeFormatter REQUESTING_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    public static final DateTimeFormatter RESPONSE_FORMAT = DateTimeFormatter.ISO_INSTANT;
+    public static final DateTimeFormatter MAIN_FRAGMENT_DISPLAY_TIME_FORMAT = DateTimeFormatter.ofPattern("d MMM yyyy  EEE");
     public static String TWITTER_SESSION = "";
 }

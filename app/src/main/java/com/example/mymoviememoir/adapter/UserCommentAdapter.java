@@ -14,11 +14,9 @@ import com.example.mymoviememoir.network.reponse.StatusesItem;
 import com.example.mymoviememoir.utils.Values;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author sunkai
@@ -59,10 +57,10 @@ public class UserCommentAdapter extends RecyclerView.Adapter<UserCommentAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy", Locale.getDefault());
+        DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("EEE MMM d HH:mm:ss Z yyyy");
         StatusesItem item = comments.get(position);
         try {
-            Date createDate = simpleDateFormat.parse(item.getCreatedAt());
+            TemporalAccessor createDate = datePattern.parse(item.getCreatedAt());
             holder.postDate.setText(Values.SIMPLE_DATE_FORMAT.format(createDate));
         } catch (Exception e) {
             e.printStackTrace();

@@ -77,9 +77,9 @@ public final class BagOfWordsUtils {
 
     public static Map<Classification, ArrayList<StatusesItem>> makeStringDivision(List<StatusesItem> sentense, String movieName, Set<String> positiveWords, Set<String> negativeWords) {
         Map<Classification, ArrayList<StatusesItem>> result = new HashMap<>();
-        for (Classification classification : Classification.values()) {
-            result.put(classification, new ArrayList<>());
-        }
+        Arrays.stream(Classification.values()).forEach(
+                classification -> result.put(classification, new ArrayList<>())
+        );
         for (StatusesItem item : sentense) {
             String[] words = item.getText().split(" ");
             int value = 0;
@@ -91,7 +91,7 @@ public final class BagOfWordsUtils {
                     value--;
                 }
             }
-            if (value >0) {
+            if (value > 0) {
                 result.get(Classification.POSITIVE).add(item);
             } else if (value < 0) {
                 result.get(Classification.NEGATIVE).add(item);

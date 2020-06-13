@@ -31,6 +31,7 @@ import com.example.mymoviememoir.R;
 import com.example.mymoviememoir.dialog.AddCinemaDialog;
 import com.example.mymoviememoir.entities.Cinema;
 import com.example.mymoviememoir.entities.Memoir;
+import com.example.mymoviememoir.entities.Person;
 import com.example.mymoviememoir.network.MyMovieMemoirRestfulAPI;
 import com.example.mymoviememoir.network.RequestHelper;
 import com.example.mymoviememoir.network.interfaces.RestfulGetModel;
@@ -44,6 +45,9 @@ import com.example.mymoviememoir.utils.Values;
 import com.example.mymoviememoir.view.RatingSelectView;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -76,7 +80,7 @@ public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
     private ImageButton addCinema;
     private Button ok;
     private Toolbar toolbar;
-    private Calendar selectedWatchedDate;
+    private LocalDateTime selectedWatchedDate;
 
 
     @Override
@@ -140,21 +144,20 @@ public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
     }
 
     private void showAddCinemaDialog(View v) {
-        AddCinemaDialog dialog = new AddCinemaDialog();
+        final AddCinemaDialog dialog = new AddCinemaDialog();
         dialog.setOnAddCinemaSuccessListener(this::onAddCinemaSuccess);
         dialog.show(getSupportFragmentManager(), AddCinemaDialog.class.getName());
     }
 
     private void showDatePickerDialog(View v) {
-        Calendar calendar = Calendar.getInstance();
-        new DatePickerDialog(this, this::handleOnDateSelected, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        final LocalDate today = LocalDate.now();
+        new DatePickerDialog(this, this::handleOnDateSelected, today.getYear(), today.getMonthValue() - 1, today.getDayOfMonth()).show();
     }
 
     private void handleOnDateSelected(View v, int year, int month, int day) {
-        final Calendar calendar = Calendar.getInstance();
-        selectedWatchedDate = calendar;
-        calendar.set(year, month, day);
-        watchedDateTextview.setText(Values.SIMPLE_DATE_FORMAT.format(calendar.getTime()));
+        final LocalDate selectedDate = LocalDate.of(year, month + 1, day);
+        this.selectedWatchedDate = LocalDateTime.of(selectedDate, LocalTime.MIDNIGHT);
+        watchedDateTextview.setText(selectedDate.format(Values.SIMPLE_DATE_FORMAT));
     }
 
     private void addNewMemoir(View v) {
@@ -238,15 +241,16 @@ public class AddMemoirActivity extends BaseRequestRestfulServiceActivity {
                         Toast.makeText(this, "The cinema does not exist, please choose again", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    Cinema cinema = GsonUtils.fromJsonToObject(response, Cinema.class);
+                    final Cinema cinema = GsonUtils.fromJsonToObject(response, Cinema.class);
+                    final LocalDate releaseDate = LocalDate.from(Values.SIMPLE_DATE_FORMAT_US.parse(movieReleaseDate.getText().toString()));
                     Memoir memoir = new Memoir();
                     memoir.setCinemaId(cinema);
-                    memoir.setPersonId(PersonInfoUtils.getPersonInstance());
+                    memoir.setPersonId(PersonInfoUtils.getPersonInstance().orElse(new Person()));
                     memoir.setMovieName(movieName.getText().toString());
-                    memoir.setMovieReleaseDate(Values.REQUESTING_FORMAT.format(Values.SIMPLE_DATE_FORMAT_US.parse(movieReleaseDate.getText().toString())));
+                    memoir.setMovieReleaseDate(Values.REQUESTING_FORMAT.format(LocalDateTime.of(releaseDate,LocalTime.MIDNIGHT)));
                     memoir.setRatingScore(movieRate.getRatingScore());
-                    memoir.setWatchedDate(Values.REQUESTING_FORMAT.format(selectedWatchedDate.getTime()));
-                    memoir.setWatchedTime(Values.REQUESTING_FORMAT.format(selectedWatchedDate.getTime()));
+                    memoir.setWatchedDate(selectedWatchedDate.format(Values.REQUESTING_FORMAT));
+                    memoir.setWatchedTime(selectedWatchedDate.format(Values.REQUESTING_FORMAT));
                     memoir.setMemoirComment(movieComment.getText().toString());
                     memoir.setMovieImage(getIntent().getStringExtra(MOVIE_IMAGE));
                     memoir.setMovieId(getIntent().getStringExtra(MOVIE_ID));
