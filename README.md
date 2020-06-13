@@ -1,10 +1,10 @@
 #MyMovieMemoir
-Assignment of FIT5046
+Assignment of FIT5046 2020 SEM 1
 
 #### For using this applicaiton, there are some additonal operations need to do
-* Open [Google API Console](https://console.developers.google.com/apis) to apply a google api key, and add the key into the value of "com.google.android.geo.API_KEY" in [^AndroidManifest.xml] and adding the api_ket into the [^com.example.mymoviememoir.network.request.base.BaseGoogleRequest] class.
-* Open [Twitter Developer Console](https://developer.twitter.com/en/dashboard) and apply a developer account. Put the session key and private key into [^com.example.mymoviememoir.network.request.twitter.TwitterSessionRequest] class
-* Open [The MovieDB developer Page](https://developers.themoviedb.org/) apply a developer account. Put the api_key into [^com.example.mymoviememoir.network.request.base.BaseMovieDBRequest] class
+* Open [Google API Console](https://console.developers.google.com/apis) to apply a google api key, and add the key into the value of "com.google.android.geo.API_KEY" in <u>AndroidManifest.xml</u> and adding the api_ket into the <u>com.example.mymoviememoir.network.request.base.BaseGoogleRequest</u> class.
+* Open [Twitter Developer Console](https://developer.twitter.com/en/dashboard) and apply a developer account. Put the session key and private key into <u>com.example.mymoviememoir.network.request.twitter.TwitterSessionRequest</u> class
+* Open [The MovieDB developer Page](https://developers.themoviedb.org/) apply a developer account. Put the api_key into <u>com.example.mymoviememoir.network.request.base.BaseMovieDBRequest</u> class
 
 ---
 ![Login page](https://sunkaiiii.github.io/docs/images/5046_1.jpg)
